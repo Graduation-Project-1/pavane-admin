@@ -24,39 +24,12 @@
   }
 
   .admin-data {
-    // background-color: aqua;
     display: flex;
     justify-content: center;
 
-    .admin-table {
-      border: 1px solid #ffa300;
-      width: 600px;
-
-      thead {
-        border: 1px solid #ffa300;
-        text-align: center;
-
-        tr {
-          border: 1px solid #ffa300;
-
-          th {
-            border: 1px solid #ffa300;
-          }
-        }
-      }
-      tbody {
-        border: 1px solid #ffa300;
-        text-align: center;
-
-        tr {
-          border: 1px solid #ffa300;
-
-          td {
-            border: 1px solid #ffa300;
-            padding: 20px;
-          }
-        }
-      }
+    .my-table {
+      text-align: center;
+      margin: 20px;
     }
   }
 }

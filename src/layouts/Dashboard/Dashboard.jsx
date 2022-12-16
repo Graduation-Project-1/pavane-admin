@@ -10,6 +10,7 @@ import Categories from '../../pages/Categories/Categories'
 import Advertisements from '../../pages/Advertisements/Advertisements'
 import Customers from '../../pages/Customers/Customers'
 import AddAdmin from '../../pages/Admins/AddAdmin/AddAdmin'
+import AddBrand from '../../pages/Brands/AddBrand/AddBrand'
 
 export default function Dashboard() {
   return <>
@@ -29,6 +30,8 @@ export default function Dashboard() {
           <Route path='/admins/addAdmin' element={<AddAdmin />} />
 
           <Route path='/brands' element={<Brands />} />
+          <Route path='/brands/addBrand' element={<AddBrand />} />
+
           <Route path='/products' element={<Products />} />
           <Route path='/collections' element={<Collections />} />
           <Route path='/categories' element={<Categories />} />

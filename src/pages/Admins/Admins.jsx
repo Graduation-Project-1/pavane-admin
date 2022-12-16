@@ -22,7 +22,7 @@ export default function Admins() {
       <div className="row">
         <div className="col-md-12">
           <div className="admin-data">
-            <table className='admin-table'>
+            <table class="table table-striped table-hover my-table">
               <thead>
                 <tr>
                   <th>#</th>
