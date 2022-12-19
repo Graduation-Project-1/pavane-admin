@@ -11,6 +11,7 @@ import Advertisements from '../../pages/Advertisements/Advertisements'
 import Customers from '../../pages/Customers/Customers'
 import AddAdmin from '../../pages/Admins/AddAdmin/AddAdmin'
 import AddBrand from '../../pages/Brands/AddBrand/AddBrand'
+import AdminDetails from '../../pages/Admins/AdminDetails/AdminDetails'
 
 export default function Dashboard() {
   return <>
@@ -27,6 +28,7 @@ export default function Dashboard() {
         <Routes>
           <Route path='/' element={<Navigate replace to='/admins' />} />
           <Route path='/admins' element={<Admins />} />
+          <Route path='/admins/:id' element={<AdminDetails />} />
           <Route path='/admins/addAdmin' element={<AddAdmin />} />
 
           <Route path='/brands' element={<Brands />} />
