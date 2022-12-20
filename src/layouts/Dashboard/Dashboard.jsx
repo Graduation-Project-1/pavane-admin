@@ -12,6 +12,7 @@ import Customers from '../../pages/Customers/Customers'
 import AddAdmin from '../../pages/Admins/AddAdmin/AddAdmin'
 import AddBrand from '../../pages/Brands/AddBrand/AddBrand'
 import AdminDetails from '../../pages/Admins/AdminDetails/AdminDetails'
+import EditAdmin from '../../pages/Admins/AdminDetails/EditAdmin/EditAdmin'
 
 export default function Dashboard() {
   return <>
@@ -29,6 +30,7 @@ export default function Dashboard() {
           <Route path='/' element={<Navigate replace to='/admins' />} />
           <Route path='/admins' element={<Admins />} />
           <Route path='/admins/:id' element={<AdminDetails />} />
+          <Route path='/admins/:id/edit' element={<EditAdmin />} />
           <Route path='/admins/addAdmin' element={<AddAdmin />} />
 
           <Route path='/brands' element={<Brands />} />
