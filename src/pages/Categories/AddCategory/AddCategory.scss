@@ -1,11 +1,11 @@
-.add-brand-page {
+.add-category-page {
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #e9ecef;
-  padding: 20px 0;
 
-  .add-brand-card {
+  .add-category-card {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -20,18 +20,12 @@
       margin-bottom: 0;
     }
 
-    .add-brand-input {
+    .add-category-input {
       margin-bottom: 10px;
       width: 320px;
     }
 
-    .select-categories {
-      color: #242424;
-      font-size: 16px;
-      margin-bottom: 0;
-    }
-
-    .add-brand-button {
+    .add-category-button {
       width: 100%;
       padding: 7px;
       border: none;
@@ -91,48 +85,6 @@
         cursor: pointer;
         background-color: #00000040;
         border-radius: 7px;
-      }
-    }
-
-    .check {
-      display: flex;
-      align-items: center;
-
-      input[type="checkbox"] + label {
-        display: block;
-        margin: 0.2em;
-        cursor: pointer;
-        padding: 0.2em;
-        font-family: "Arial";
-      }
-
-      input[type="checkbox"] {
-        display: none;
-      }
-
-      input[type="checkbox"] + label:before {
-        content: "\2714";
-        border: 0.1em solid #000;
-        border-radius: 0.2em;
-        display: inline-block;
-        width: 24px;
-        height: 24px;
-        padding-left: 0.25em;
-        padding-bottom: 0.3em;
-        margin-right: 0.3em;
-        vertical-align: bottom;
-        color: transparent;
-        transition: 0.2s;
-      }
-
-      input[type="checkbox"] + label:active:before {
-        transform: scale(0);
-      }
-
-      input[type="checkbox"]:checked + label:before {
-        background-color: #ffa300;
-        border-color: #ffa300;
-        color: #fff;
       }
     }
   }

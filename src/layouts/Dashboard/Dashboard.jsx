@@ -13,6 +13,17 @@ import AddAdmin from '../../pages/Admins/AddAdmin/AddAdmin'
 import AddBrand from '../../pages/Brands/AddBrand/AddBrand'
 import AdminDetails from '../../pages/Admins/AdminDetails/AdminDetails'
 import EditAdmin from '../../pages/Admins/AdminDetails/EditAdmin/EditAdmin'
+import AddCategory from '../../pages/Categories/AddCategory/AddCategory'
+import CategoryDetails from '../../pages/Categories/CategoryDetails/CategoryDetails'
+import EditCategory from '../../pages/Categories/CategoryDetails/EditCategory/EditCategory'
+import BrandDetails from '../../pages/Brands/BrandDetails/BrandDetails'
+import EditBrand from '../../pages/Brands/BrandDetails/EditBrand/EditBrand'
+import AddProduct from '../../pages/Products/AddProduct/AddProduct'
+import ProductDetails from '../../pages/Products/ProductDetails/ProductDetails'
+import AddCollection from '../../pages/Collections/AddCollection/AddCollection'
+import CollectionDetails from '../../pages/Collections/CollectionDetails/CollectionDetails'
+import AddCustomer from '../../pages/Customers/AddCustomer/AddCustomer'
+import CustomerDetails from '../../pages/Customers/CustomerDetails/CustomerDetails'
 
 export default function Dashboard() {
   return <>
@@ -34,13 +45,29 @@ export default function Dashboard() {
           <Route path='/admins/addAdmin' element={<AddAdmin />} />
 
           <Route path='/brands' element={<Brands />} />
+          <Route path='/brands/:id' element={<BrandDetails />} />
+          <Route path='/brands/:id/edit' element={<EditBrand />} />
           <Route path='/brands/addBrand' element={<AddBrand />} />
 
           <Route path='/products' element={<Products />} />
+          <Route path='/products/:id' element={<ProductDetails />} />
+          <Route path='/products/addProduct' element={<AddProduct />} />
+
           <Route path='/collections' element={<Collections />} />
+          <Route path='/collections/:id' element={<CollectionDetails />} />
+          <Route path='/collections/addCollection' element={<AddCollection />} />
+
           <Route path='/categories' element={<Categories />} />
+          <Route path='/categories/:id' element={<CategoryDetails />} />
+          <Route path='/categories/:id/edit' element={<EditCategory />} />
+          <Route path='/categories/addCategory' element={<AddCategory />} />
+
           <Route path='/advertisements' element={<Advertisements />} />
+
           <Route path='/customers' element={<Customers />} />
+          <Route path='/customers/:id' element={<CustomerDetails />} />
+          <Route path='/customers/addCustomer' element={<AddCustomer />} />
+
           <Route path='/*' element={<Navigate replace to='/admins' />} />
         </Routes>
       </div>
