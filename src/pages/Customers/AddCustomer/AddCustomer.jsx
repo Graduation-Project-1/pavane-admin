@@ -76,7 +76,7 @@ export default function AddCustomer() {
           phone: newCustomer.phone,
           dateOfBirth: dateOfBirth,
           gender: gender,
-          location: "alex",
+          location: location,
         }
         const { data } = await customerServices.addUser(customerData)
         if (data.success && data.message === "userAdded") {
