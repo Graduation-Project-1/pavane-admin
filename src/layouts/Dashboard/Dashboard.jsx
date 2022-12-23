@@ -24,6 +24,7 @@ import AddCollection from '../../pages/Collections/AddCollection/AddCollection'
 import CollectionDetails from '../../pages/Collections/CollectionDetails/CollectionDetails'
 import AddCustomer from '../../pages/Customers/AddCustomer/AddCustomer'
 import CustomerDetails from '../../pages/Customers/CustomerDetails/CustomerDetails'
+import EditProduct from '../../pages/Products/ProductDetails/EditProduct/EditProduct'
 
 export default function Dashboard() {
   return <>
@@ -51,6 +52,7 @@ export default function Dashboard() {
 
           <Route path='/products' element={<Products />} />
           <Route path='/products/:id' element={<ProductDetails />} />
+          <Route path='/products/:id/edit' element={<EditProduct />} />
           <Route path='/products/addProduct' element={<AddProduct />} />
 
           <Route path='/collections' element={<Collections />} />

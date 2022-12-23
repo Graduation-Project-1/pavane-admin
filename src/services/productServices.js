@@ -11,8 +11,18 @@ let productServices = {
     return response
   },
 
+  getProductById: async (id) => {
+    const response = await Axios.get(`getProductById/${id}`)
+    return response
+  },
+
   getAllProducts: async (page = 1, size = 10) => {
     const response = await Axios.get(`getAllProducts?page=${page}&size=${size}`)
+    return response
+  },
+
+  deleteProduct: async (id) => {
+    const response = await Axios.delete(`deleteProduct/${id}`)
     return response
   },
 }
