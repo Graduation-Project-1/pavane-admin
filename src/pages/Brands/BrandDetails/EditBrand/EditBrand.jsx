@@ -130,32 +130,26 @@ export default function EditBrand() {
         const { data } = await brandServices.editVendor(params.id, editedData)
         if (data.success && data.status === 200) {
           setLoading(false);
+          var formData = new FormData();
+          formData.append("images", uploadImage);
+          setLoading(true);
+          try {
+            const { data } = typeof uploadImage === "object" && await brandServices.uploadBrandImage(params.id, formData)
+            if (data.success && data.status === 200) {
+              setLoading(false);
+            }
+          } catch (error) {
+            setLoading(false);
+            setErrorMessage(error);
+          }
           navigate(`/brands/${params.id}`);
-        } else {
-          console.log(data);
         }
       } catch (error) {
         setLoading(false);
-        console.log(error);
-        // setErrorMessage(error.response);
+        setErrorMessage(error.response);
       }
     }
   };
-
-  async function uploadBrandImageHandler(e) {
-    try {
-      var formData = new FormData();
-      formData.append("images", uploadImage);
-      const { data } = await uploadImagesServices.uploadImages(formData)
-      if ((data.Data).length > 0) {
-        let path = (data.Data)[0]
-        await brandServices.editVendor(params.id, { image: path })
-      }
-    } catch (error) {
-      setLoading(false);
-      setErrorMessage(error);
-    }
-  }
 
   const ref = useRef();
   const imageUploader = (e) => {
@@ -203,15 +197,11 @@ export default function EditBrand() {
     getAllCategoriesHandler()
   }, [])
 
-  useEffect(() => {
-    console.log( getFinalCategories())
-  }, [selectedCategories])
-
   return <>
     <div className="row">
       <div className="col-md-12">
-        <div className="edit-category-page">
-          <div className="edit-category-card">
+        <div className="edit-brand-page">
+          <div className="edit-brand-card">
             <h3>Edit Brand</h3>
             {
               errorMessage ?
@@ -231,7 +221,7 @@ export default function EditBrand() {
             <div className="main-image-label">
               {uploadImage && (
                 <img
-                  src={uploadImage}
+                  src={typeof uploadImage === "object" ? URL.createObjectURL(uploadImage) : uploadImage}
                   alt="imag-viewer"
                   className="uploaded-img"
                   onClick={() => {
@@ -262,7 +252,7 @@ export default function EditBrand() {
               <label htmlFor="name">Name</label>
               <input
                 onChange={getNewBrandData}
-                className='form-control add-category-input'
+                className='form-control add-brand-input'
                 type="text"
                 name="name"
                 id="name"
@@ -271,7 +261,7 @@ export default function EditBrand() {
               <label htmlFor="name">Email</label>
               <input
                 onChange={getNewBrandData}
-                className='form-control add-category-input'
+                className='form-control add-brand-input'
                 type="email"
                 name="email"
                 id="email"
@@ -280,7 +270,7 @@ export default function EditBrand() {
               <label htmlFor="name">Phone</label>
               <input
                 onChange={getNewBrandData}
-                className='form-control add-category-input'
+                className='form-control add-brand-input'
                 type="number"
                 name="phone"
                 id="phone"
@@ -292,14 +282,14 @@ export default function EditBrand() {
                   return (
                     <div className="check" key={category._id}>
 
-                      <input checked={newBrand.categoryList[index]} type="checkbox" id={category.name} onChange={(e) => { toggleSelectedCategoriesHandler(category._id) }} />
+                      <input type="checkbox" id={category.name} onChange={(e) => { toggleSelectedCategoriesHandler(category._id) }} />
 
                       <label htmlFor={category.name}>{category.name}</label>
                     </div>
                   )
                 })
               }
-              <button className='add-category-button'>
+              <button className='add-brand-button'>
                 {loading ?
                   (<i className="fas fa-spinner fa-spin "></i>)
                   : "Edit Brand"}
