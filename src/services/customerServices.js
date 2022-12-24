@@ -11,6 +11,16 @@ let customerServices = {
     return response
   },
 
+  getUserById: async (id) => {
+    const response = await Axios.get(`getUserById/${id}`)
+    return response
+  },
+
+  deleteUser: async (id) => {
+    const response = await Axios.delete(`deleteUser/${id}`)
+    return response
+  },
+
   getAllUsers: async (page = 1, size = 10) => {
     const response = await Axios.get(`getAllUsers?page=${page}&size=${size}`)
     return response

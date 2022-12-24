@@ -28,6 +28,8 @@ import EditProduct from '../../pages/Products/ProductDetails/EditProduct/EditPro
 import AddAdvertisement from '../../pages/Advertisements/AddAdvertisement/AddAdvertisement'
 import AdvertisementDetails from '../../pages/Advertisements/AdvertisementDetails/AdvertisementDetails'
 import EditAdvertisement from '../../pages/Advertisements/AdvertisementDetails/EditAdvertisement/EditAdvertisement'
+import EditCustomer from '../../pages/Customers/CustomerDetails/EditCustomer/EditCustomer'
+import EditCollection from '../../pages/Collections/CollectionDetails/EditCollection/EditCollection'
 
 export default function Dashboard() {
   return <>
@@ -60,6 +62,7 @@ export default function Dashboard() {
 
           <Route path='/collections' element={<Collections />} />
           <Route path='/collections/:id' element={<CollectionDetails />} />
+          <Route path='/collections/:id/edit' element={<EditCollection />} />
           <Route path='/collections/addCollection' element={<AddCollection />} />
 
           <Route path='/categories' element={<Categories />} />
@@ -74,6 +77,7 @@ export default function Dashboard() {
 
           <Route path='/customers' element={<Customers />} />
           <Route path='/customers/:id' element={<CustomerDetails />} />
+          <Route path='/customers/:id/edit' element={<EditCustomer />} />
           <Route path='/customers/addCustomer' element={<AddCustomer />} />
 
           <Route path='/*' element={<Navigate replace to='/admins' />} />
