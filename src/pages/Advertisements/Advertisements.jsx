@@ -57,10 +57,8 @@ export default function Advertisements() {
           (
             <div className="col-md-12">
               <div className="advertisement-data">
-
                 <div id="carouselExampleControls" className="carousel slide" data-bs-ride="carousel">
                   <div className="carousel-inner">
-
                     {advertisements.map((advertisement, index) => {
                       return (
                         <div className="carousel-item active" key={advertisement._id} onClick={() => navigate(`/advertisements/${advertisement._id}`)}>
@@ -78,21 +76,6 @@ export default function Advertisements() {
                     <span className="visually-hidden">Next</span>
                   </button>
                 </div>
-
-
-                {/* <table className="table table-striped table-hover my-table">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Role</th>
-                </tr>
-              </thead>
-              <tbody>
-
-              </tbody>
-            </table> */}
               </div>
             </div>
           )}

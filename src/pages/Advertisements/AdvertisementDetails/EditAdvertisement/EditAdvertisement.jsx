@@ -1,10 +1,10 @@
 import Joi from 'joi'
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import categoryServices from '../../../../services/categoryServices'
-import './EditCategory.scss'
+import advertisementServices from '../../../../services/advertisementServices'
+import './EditAdvertisement.scss'
 
-export default function EditCategory() {
+export default function EditAdvertisement() {
 
   const params = useParams()
   const navigate = useNavigate()
@@ -14,12 +14,14 @@ export default function EditCategory() {
   const [errorMessage, setErrorMessage] = useState("");
   const [uploadImage, setUploadImage] = useState(null);
 
-  const [oldCategory, setOldCategory] = useState({
-    name: ""
+  const [oldAdvertisement, setOldAdvertisement] = useState({
+    name: "",
+    link: ""
   })
 
-  const [newCategory, setNewCategory] = useState({
-    name: ""
+  const [newAdvertisement, setNewAdvertisement] = useState({
+    name: "",
+    link: ""
   })
 
   function checkUpdatedFields(newData, oldData) {
@@ -33,18 +35,20 @@ export default function EditCategory() {
     return finalEditiedData
   }
 
-  async function getCategoryByIdHandler() {
+  async function getAdvertisementByIdHandler() {
     setLoading(true)
     try {
-      const { data } = await categoryServices.getCategoryById(params.id);
+      const { data } = await advertisementServices.getAdvertisementById(params.id);
       setLoading(true)
       if (data.success && data.status === 200) {
         setLoading(false);
-        setOldCategory({
-          name: data?.Data?.name
+        setOldAdvertisement({
+          name: data?.Data?.name,
+          link: data?.Data?.link
         })
-        setNewCategory({
-          name: data?.Data?.name
+        setNewAdvertisement({
+          name: data?.Data?.name,
+          link: data?.Data?.link
         })
         setUploadImage(data?.Data?.image)
       }
@@ -54,27 +58,28 @@ export default function EditCategory() {
     }
   }
 
-  function getNewCategoryData(e) {
-    let newCategoryData = { ...newCategory }
-    newCategoryData[e.target.name] = e.target.value
-    setNewCategory(newCategoryData)
+  function getNewAdvertisementData(e) {
+    let newAdvertisementData = { ...newAdvertisement }
+    newAdvertisementData[e.target.name] = e.target.value
+    setNewAdvertisement(newAdvertisementData)
   }
 
-  function editCategoryValidation(newCategory) {
+  function editAdvertisementValidation(newAdvertisement) {
     const schema = Joi.object({
       name: Joi.string()
         .pattern(/^(?![\s.]+$)[a-zA-Z\s.]*$/)
         .min(3)
         .max(30)
-        .required()
+        .required(),
+      link: Joi.string()
     });
-    return schema.validate(newCategory, { abortEarly: false });
+    return schema.validate(newAdvertisement, { abortEarly: false });
   }
 
-  async function editCategoryHandler(e) {
+  async function editAdvertisementHandler(e) {
     e.preventDefault();
     setErrorList([]);
-    let validationResult = editCategoryValidation(newCategory);
+    let validationResult = editAdvertisementValidation(newAdvertisement);
     setLoading(true);
     if (validationResult.error) {
       setLoading(false);
@@ -83,21 +88,21 @@ export default function EditCategory() {
       setLoading(true);
       let editedData = {};
 
-      Object.keys(checkUpdatedFields(newCategory, oldCategory)).forEach((key) => {
+      Object.keys(checkUpdatedFields(newAdvertisement, oldAdvertisement)).forEach((key) => {
         editedData = {
           ...editedData,
-          [key]: newCategory[key]
+          [key]: newAdvertisement[key]
         }
       })
       try {
-        const { data } = await categoryServices.editCategory(params.id, editedData)
+        const { data } = await advertisementServices.editAdvertisement(params.id, editedData)
         if (data.success && data.status === 200) {
           setLoading(false);
           var formData = new FormData();
           formData.append("images", uploadImage);
           setLoading(true);
           try {
-            const { data } = await categoryServices.uploadCategoryImage(params.id, formData)
+            const { data } = typeof uploadImage === "object" && await advertisementServices.uploadAdvertisementImage(params.id, formData)
             if (data.success && data.code === 200) {
               setLoading(false);
             }
@@ -105,7 +110,7 @@ export default function EditCategory() {
             setLoading(false);
             setErrorMessage(error);
           }
-          navigate(`/categories/${params.id}`);
+          navigate(`/advertisements/${params.id}`);
         }
       } catch (error) {
         setLoading(false);
@@ -120,15 +125,15 @@ export default function EditCategory() {
   };
 
   useEffect(() => {
-    getCategoryByIdHandler()
+    getAdvertisementByIdHandler()
   }, [])
 
   return <>
     <div className="row">
       <div className="col-md-12">
-        <div className="edit-category-page">
-          <div className="edit-category-card">
-            <h3>Edit Category</h3>
+        <div className="edit-advertisement-page">
+          <div className="edit-advertisement-card">
+            <h3>Edit Advertisement</h3>
             {
               errorMessage ?
                 (<div className="alert alert-danger myalert">
@@ -171,23 +176,32 @@ export default function EditCategory() {
                 onClick={imageUploader}
                 htmlFor="upload-img"
               >
-                Add Image
+                Add Advertisement
               </label>
             </div>
-            <form onSubmit={editCategoryHandler}>
+            <form onSubmit={editAdvertisementHandler}>
               <label htmlFor="name">Name</label>
               <input
-                onChange={getNewCategoryData}
-                className='form-control add-category-input'
+                onChange={getNewAdvertisementData}
+                className='form-control add-advertisement-input'
                 type="text"
                 name="name"
                 id="name"
-                value={newCategory.name}
+                value={newAdvertisement.name}
               />
-              <button className='add-category-button'>
+              <label htmlFor="link">Link</label>
+              <input
+                onChange={getNewAdvertisementData}
+                className='form-control add-advertisement-input'
+                type="text"
+                name="link"
+                id="link"
+                value={newAdvertisement.link}
+              />
+              <button className='add-advertisement-button'>
                 {loading ?
                   (<i className="fas fa-spinner fa-spin "></i>)
-                  : "Edit Category"}
+                  : "Edit Advertisement"}
               </button>
             </form>
           </div>

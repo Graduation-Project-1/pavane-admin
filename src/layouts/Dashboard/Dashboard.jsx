@@ -25,6 +25,9 @@ import CollectionDetails from '../../pages/Collections/CollectionDetails/Collect
 import AddCustomer from '../../pages/Customers/AddCustomer/AddCustomer'
 import CustomerDetails from '../../pages/Customers/CustomerDetails/CustomerDetails'
 import EditProduct from '../../pages/Products/ProductDetails/EditProduct/EditProduct'
+import AddAdvertisement from '../../pages/Advertisements/AddAdvertisement/AddAdvertisement'
+import AdvertisementDetails from '../../pages/Advertisements/AdvertisementDetails/AdvertisementDetails'
+import EditAdvertisement from '../../pages/Advertisements/AdvertisementDetails/EditAdvertisement/EditAdvertisement'
 
 export default function Dashboard() {
   return <>
@@ -65,6 +68,9 @@ export default function Dashboard() {
           <Route path='/categories/addCategory' element={<AddCategory />} />
 
           <Route path='/advertisements' element={<Advertisements />} />
+          <Route path='/advertisements/:id' element={<AdvertisementDetails />} />
+          <Route path='/advertisements/:id/edit' element={<EditAdvertisement />} />
+          <Route path='/advertisements/addAdvertisement' element={<AddAdvertisement />} />
 
           <Route path='/customers' element={<Customers />} />
           <Route path='/customers/:id' element={<CustomerDetails />} />

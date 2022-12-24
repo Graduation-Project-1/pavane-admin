@@ -203,9 +203,9 @@ export default function EditBrand() {
     getAllCategoriesHandler()
   }, [])
 
-  // useEffect(() => {
-  //   uploadBrandImageHandler()
-  // }, [uploadImage])
+  useEffect(() => {
+    console.log( getFinalCategories())
+  }, [selectedCategories])
 
   return <>
     <div className="row">
