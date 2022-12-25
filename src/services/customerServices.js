@@ -16,6 +16,11 @@ let customerServices = {
     return response
   },
 
+  editUser: async (id, obj) => {
+    const response = await Axios.put(`updateUser/${id}`, obj)
+    return response
+  },
+
   deleteUser: async (id) => {
     const response = await Axios.delete(`deleteUser/${id}`)
     return response

@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import brandServices from '../../../../services/brandServices'
 import categoryServices from '../../../../services/categoryServices'
-import uploadImagesServices from '../../../../services/uploadImagesServices'
 import './EditBrand.scss'
 
 export default function EditBrand() {
