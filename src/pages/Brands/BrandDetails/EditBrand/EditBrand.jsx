@@ -15,8 +15,6 @@ export default function EditBrand() {
   const [errorMessage, setErrorMessage] = useState("");
   const [uploadImage, setUploadImage] = useState(null);
   const [categories, setCategories] = useState([])
-  const [selectedCategories, setSelectedCategories] = useState([])
-  const [categoriesId, setCategoriesId] = useState([])
 
   const [oldBrand, setOldBrand] = useState({
     name: "",
@@ -31,12 +29,6 @@ export default function EditBrand() {
     phone: "",
     categoryList: ""
   })
-
-  // const [brandData, setBrandData] = useState({
-  //   name: "",
-  //   email: "",
-  //   phone: ""
-  // })
 
   function checkUpdatedFields(newData, oldData) {
     let finalEditiedData = {}
@@ -60,16 +52,15 @@ export default function EditBrand() {
           name: data?.Data?.name,
           email: data?.Data?.email,
           phone: data?.Data?.phone,
-          categoryList: data?.Data?.categoryList
+          categoryList: data?.Data?.categoryList.map((cat) => { return cat._id })
         })
         setNewBrand({
           name: data?.Data?.name,
           email: data?.Data?.email,
           phone: data?.Data?.phone,
-          categoryList: data?.Data?.categoryList
+          categoryList: data?.Data?.categoryList.map((cat) => { return cat._id })
         })
         setUploadImage(data?.Data?.image)
-        setCategoriesId(data?.Data?.categoryList)
 
       }
     } catch (e) {
@@ -125,6 +116,7 @@ export default function EditBrand() {
           }
         }
       })
+
       try {
         const { data } = await brandServices.editVendor(params.id, editedData)
         if (data.success && data.status === 200) {
@@ -170,25 +162,18 @@ export default function EditBrand() {
     }
   }
 
-  function toggleSelectedCategoriesHandler(categoryId) {
-    if (selectedCategories.includes(categoryId)) {
-      let oldSelectedCategories = selectedCategories
-      let newSelectedCategories = oldSelectedCategories.filter((category) => { return category !== categoryId })
-      setSelectedCategories(newSelectedCategories)
-    } else {
-      setSelectedCategories((prev) => { return [...prev, categoryId] })
-    }
+  function isSelectedCategory(categoreyId) {
+    return newBrand["categoryList"].includes(categoreyId)
   }
 
-  function getFinalCategories() {
-    let finalBrandCategories = []
-    selectedCategories.forEach((selectedCategory) => {
-      categories.filter(category => category._id === selectedCategory).map((category) => {
-        finalBrandCategories.push(category._id)
-      })
-    })
-
-    return finalBrandCategories
+  function toggleSelectedCategoriesHandler(categoryId) {
+    if (isSelectedCategory(categoryId)) {
+      let oldSelectedCategories = newBrand["categoryList"]
+      let newSelectedCategories = oldSelectedCategories.filter((category) => { return category !== categoryId })
+      setNewBrand((prev) => { return { ...prev, categoryList: newSelectedCategories } })
+    } else {
+      setNewBrand((prev) => { return { ...prev, categoryList: [...prev.categoryList, categoryId] } })
+    }
   }
 
   useEffect(() => {
@@ -280,9 +265,7 @@ export default function EditBrand() {
                 categories.map((category, index) => {
                   return (
                     <div className="check" key={category._id}>
-
-                      <input type="checkbox" id={category.name} onChange={(e) => { toggleSelectedCategoriesHandler(category._id) }} />
-
+                      <input checked={isSelectedCategory(category._id)} type="checkbox" id={category.name} onChange={(e) => { toggleSelectedCategoriesHandler(category._id) }} />
                       <label htmlFor={category.name}>{category.name}</label>
                     </div>
                   )
