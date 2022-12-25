@@ -65,7 +65,7 @@ export default function EditAdmin() {
   function editAdminValidation(newAdmin) {
     const schema = Joi.object({
       name: Joi.string()
-        .pattern(/^(?![\s.]+$)[a-zA-Z\s.]*$/)
+        .pattern(/^[a-zA-Z &_\-'"\\|,.\/]*$/)
         .min(3)
         .max(30)
         .required(),

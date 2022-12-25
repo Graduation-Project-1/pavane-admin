@@ -37,7 +37,7 @@ export default function AddBrand() {
   function addBrandValidation(newBrand) {
     const schema = Joi.object({
       name: Joi.string()
-        .pattern(/^(?![\s.]+$)[a-zA-Z\s.]*$/)
+        .pattern(/^[a-zA-Z &_\-'"\\|,.\/]*$/)
         .min(3)
         .max(30)
         .required(),
