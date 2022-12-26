@@ -97,7 +97,7 @@ export default function EditCategory() {
           formData.append("images", uploadImage);
           setLoading(true);
           try {
-            const { data } = await categoryServices.uploadCategoryImage(params.id, formData)
+            const { data } = await categoryServices.uploadImageCategory(params.id, formData)
             if (data.success && data.code === 200) {
               setLoading(false);
             }

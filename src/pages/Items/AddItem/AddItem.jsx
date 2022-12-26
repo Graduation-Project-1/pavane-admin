@@ -3,10 +3,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import brandServices from '../../../services/brandServices';
 import categoryServices from '../../../services/categoryServices';
-import productServices from '../../../services/productServices';
-import './AddProduct.scss'
+import itemServices from '../../../services/itemServices';
+import './AddItem.scss'
 
-export default function AddProduct() {
+export default function AddItem() {
 
   const navigate = useNavigate()
 
@@ -15,7 +15,7 @@ export default function AddProduct() {
   const [errorMessage, setErrorMessage] = useState("");
   const [uploadImage, setUploadImage] = useState(null);
   const [gender, setGender] = useState("male");
-  const [kids, setKids] = useState(false);
+  const [isAdult, setIsAdult] = useState(false);
   const [xsSize, setXsSize] = useState(false);
   const [sSize, setSSize] = useState(false);
   const [mSize, setMSize] = useState(false);
@@ -31,7 +31,7 @@ export default function AddProduct() {
   const [brand, setBrand] = useState("")
   const [brands, setBrands] = useState([])
 
-  const [newProduct, setNewProduct] = useState({
+  const [newItem, setNewItem] = useState({
     name: "",
     price: 0,
     description: "",
@@ -43,15 +43,11 @@ export default function AddProduct() {
     ref.current.click();
   };
 
-  function getNewProductData(e) {
-    let newProductData = { ...newProduct }
-    newProductData[e.target.name] = e.target.value
-    setNewProduct(newProductData)
+  function getNewItemData(e) {
+    let newItemData = { ...newItem }
+    newItemData[e.target.name] = e.target.value
+    setNewItem(newItemData)
   }
-
-
-
-
 
   async function getAllCategoriesHandler() {
     setLoading(true)
@@ -92,7 +88,7 @@ export default function AddProduct() {
   async function getAllBrandsHandler() {
     setLoading(true)
     try {
-      const { data } = await brandServices.getAllVendors();
+      const { data } = await brandServices.getAllBrands();
       setLoading(true)
       if (data.success && data.status === 200) {
         setLoading(false);
@@ -104,7 +100,7 @@ export default function AddProduct() {
     }
   }
 
-  function addProductValidation(newProduct) {
+  function addItemValidation(newItem) {
     const schema = Joi.object({
       name: Joi.string()
         .pattern(/^[a-zA-Z &_\-'"\\|,.\/]*$/)
@@ -115,13 +111,13 @@ export default function AddProduct() {
       description: Joi.string().pattern(/^[a-zA-Z &_\-'"\\|,.\/]*$/).min(3).max(50).required(),
       discountRate: Joi.number().positive()
     });
-    return schema.validate(newProduct, { abortEarly: false });
+    return schema.validate(newItem, { abortEarly: false });
   }
 
-  async function addProductHandler(e) {
+  async function addItemHandler(e) {
     e.preventDefault();
     setErrorList([]);
-    let validationResult = addProductValidation(newProduct);
+    let validationResult = addItemValidation(newItem);
     setLoading(true);
     if (validationResult.error) {
       setLoading(false);
@@ -163,28 +159,28 @@ export default function AddProduct() {
       }
 
       try {
-        let productData = {
-          name: newProduct.name,
-          price: newProduct.price,
-          description: newProduct.description,
+        let itemData = {
+          name: newItem.name,
+          price: newItem.price,
+          description: newItem.description,
           gender: gender,
-          kids: kids,
-          discountRate: newProduct.discountRate,
-          availableSize: sizes,
-          availableColors: colors,
-          vendorId: brand,
+          isAdult: isAdult,
+          discountRate: newItem.discountRate,
+          sizes: sizes,
+          colors: colors,
+          brandId: brand,
           categoryList: getFinalCategories()
         }
 
-        const { data } = await productServices.addProduct(productData)
-        if (data.success && data.message === "productAdded") {
+        const { data } = await itemServices.addItem(itemData)
+        if (data.success && data.message === "ItemAdded") {
           setLoading(false);
-          let productID = data.Data._id
+          let itemID = data.Data._id
           var formData = new FormData();
           formData.append("images", uploadImage);
           setLoading(true)
           try {
-            const { data } = await productServices.uploadProductCover(productID, formData)
+            const { data } = await itemServices.uploadItemCover(itemID, formData)
             setLoading(true)
             if (data.success && data.status === 200) {
               setLoading(false);
@@ -193,7 +189,7 @@ export default function AddProduct() {
             setLoading(false);
             setErrorMessage(error);
           }
-          navigate("/products");
+          navigate("/items");
         }
       } catch (error) {
         setLoading(false);
@@ -210,9 +206,9 @@ export default function AddProduct() {
   return <>
     <div className="row">
       <div className="col-md-12">
-        <div className="add-product-page">
-          <div className="add-product-card">
-            <h3>Add Product</h3>
+        <div className="add-item-page">
+          <div className="add-item-card">
+            <h3>Add Item</h3>
             {
               errorMessage ?
                 (<div className="alert alert-danger myalert">
@@ -258,42 +254,41 @@ export default function AddProduct() {
                 Add Cover Image
               </label>
             </div>
-
-            <form onSubmit={addProductHandler}>
+            <form onSubmit={addItemHandler}>
               <label htmlFor="name">Name</label>
               <input
-                onChange={getNewProductData}
-                className='form-control add-product-input'
+                onChange={getNewItemData}
+                className='form-control add-item-input'
                 type="text"
                 name="name"
                 id="name"
               />
               <label htmlFor="name">Description</label>
               <input
-                onChange={getNewProductData}
-                className='form-control add-product-input'
+                onChange={getNewItemData}
+                className='form-control add-item-input'
                 type="text"
                 name="description"
                 id="description"
               />
               <label htmlFor="name">Price</label>
               <input
-                onChange={getNewProductData}
-                className='form-control add-product-input'
+                onChange={getNewItemData}
+                className='form-control add-item-input'
                 type="number"
                 name="price"
                 id="price"
               />
               <label htmlFor="name">Discount</label>
               <input
-                onChange={getNewProductData}
-                className='form-control add-product-input'
+                onChange={getNewItemData}
+                className='form-control add-item-input'
                 type="number"
                 name="discountRate"
                 id="discount"
               />
               <label htmlFor="">Gender</label>
-              <div className="wrapper add-product-input">
+              <div className="wrapper add-item-input">
                 <input
                   onChange={(e) => { setGender(e.target.value) }}
                   value='male'
@@ -318,9 +313,9 @@ export default function AddProduct() {
                   <span>Female</span>
                 </label>
               </div>
-              <div className="check add-product-input">
-                <input type="checkbox" id="kids" onChange={(e) => { setKids(e.target.checked) }} />
-                <label htmlFor='kids'>For Kids</label>
+              <div className="check add-item-input">
+                <input type="checkbox" id="isAdult" onChange={(e) => { setIsAdult(e.target.checked) }} />
+                <label htmlFor='isAdult'>For Adults</label>
               </div>
               <label htmlFor="">Avaliable Sizes</label>
               <div className="check">
@@ -343,7 +338,7 @@ export default function AddProduct() {
                 <input value='xl' type="checkbox" id="xl" onChange={(e) => { setXLSize(e.target.checked) }} />
                 <label htmlFor='xl'>XL</label>
               </div>
-              <div className="check add-product-input">
+              <div className="check add-item-input">
                 <input value='xxl' type="checkbox" id="xxl" onChange={(e) => { setXXLSize(e.target.checked) }} />
                 <label htmlFor='xxl'>XXL</label>
               </div>
@@ -361,7 +356,7 @@ export default function AddProduct() {
                 <input value='blue' type="checkbox" id="blue" onChange={(e) => { setBlueColor(e.target.checked) }} />
                 <label htmlFor='blue'><div className='blue-color'></div></label>
               </div>
-              <div className="check add-product-input">
+              <div className="check add-item-input">
                 <input value='black' type="checkbox" id="black" onChange={(e) => { setBlackColor(e.target.checked) }} />
                 <label htmlFor='black'><div className='black-color'></div></label>
               </div>
@@ -377,7 +372,6 @@ export default function AddProduct() {
                   )
                 })
               }
-
               <label>Select Brand</label>
               <select onChange={(e) => { setBrand(e.target.value) }} className='form-control add-customer-input' id="brand" name="brand" title='brand'>
                 <option defaultValue='City'>-- Brand --</option>
@@ -387,11 +381,10 @@ export default function AddProduct() {
                   )
                 })}
               </select>
-
-              <button className='add-product-button'>
+              <button className='add-item-button'>
                 {loading ?
                   (<i className="fas fa-spinner fa-spin "></i>)
-                  : "Add Product"}
+                  : "Add Item"}
               </button>
             </form>
           </div>

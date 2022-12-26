@@ -1,33 +1,33 @@
 import Axios from './Axios';
 
 let brandServices = {
-  addVendor: async (obj) => {
-    const response = await Axios.post(`addVendor`, obj)
+  addBrand: async (obj) => {
+    const response = await Axios.post(`addBrand`, obj)
     return response
   },
 
-  uploadBrandImage: async (id, obj) => {
-    const response = await Axios.post(`uploadImageVendor/${id}`, obj)
+  uploadImageBrand: async (id, obj) => {
+    const response = await Axios.post(`uploadImageBrand/${id}`, obj)
     return response
   },
 
-  getAllVendors: async (page = 1, size = 10) => {
-    const response = await Axios.get(`getAllVendors?page=${page}&size=${size}`)
+  getAllBrands: async (page = 1, size = 10) => {
+    const response = await Axios.get(`getAllBrands?page=${page}&size=${size}`)
     return response
   },
 
-  getVendorById: async (id) => {
-    const response = await Axios.get(`getVendorById/${id}`)
+  getBrandById: async (id) => {
+    const response = await Axios.get(`getBrandById/${id}`)
     return response
   },
 
-  editVendor: async (id, obj) => {
-    const response = await Axios.put(`updateVendor/${id}`, obj)
+  editBrand: async (id, obj) => {
+    const response = await Axios.put(`updateBrand/${id}`, obj)
     return response
   },
 
-  deleteVendor: async (id) => {
-    const response = await Axios.delete(`deleteVendor/${id}`)
+  deleteBrand: async (id) => {
+    const response = await Axios.delete(`deleteBrand/${id}`)
     return response
   },
 }

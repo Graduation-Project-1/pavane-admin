@@ -44,7 +44,7 @@ export default function EditBrand() {
   async function getBrandByIdHandler() {
     setLoading(true)
     try {
-      const { data } = await brandServices.getVendorById(params.id);
+      const { data } = await brandServices.getBrandById(params.id);
       setLoading(true)
       if (data.success && data.status === 200) {
         setLoading(false);
@@ -118,14 +118,14 @@ export default function EditBrand() {
       })
 
       try {
-        const { data } = await brandServices.editVendor(params.id, editedData)
+        const { data } = await brandServices.editBrand(params.id, editedData)
         if (data.success && data.status === 200) {
           setLoading(false);
           var formData = new FormData();
           formData.append("images", uploadImage);
           setLoading(true);
           try {
-            const { data } = typeof uploadImage === "object" && await brandServices.uploadBrandImage(params.id, formData)
+            const { data } = typeof uploadImage === "object" && await brandServices.uploadImageBrand(params.id, formData)
             if (data.success && data.status === 200) {
               setLoading(false);
             }

@@ -64,7 +64,7 @@ export default function AddAdvertisement() {
           formData.append("images", uploadImage);
           setLoading(true)
           try {
-            const { data } = await advertisementServices.uploadAdvertisementImage(advertisementID, formData)
+            const { data } = await advertisementServices.uploadImageAdvertisement(advertisementID, formData)
             setLoading(true)
             if (data.success && data.status === 200) {
               setLoading(false);

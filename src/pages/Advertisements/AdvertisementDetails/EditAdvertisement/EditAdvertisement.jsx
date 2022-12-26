@@ -102,7 +102,7 @@ export default function EditAdvertisement() {
           formData.append("images", uploadImage);
           setLoading(true);
           try {
-            const { data } = typeof uploadImage === "object" && await advertisementServices.uploadAdvertisementImage(params.id, formData)
+            const { data } = typeof uploadImage === "object" && await advertisementServices.uploadImageAdvertisement(params.id, formData)
             if (data.success && data.code === 200) {
               setLoading(false);
             }

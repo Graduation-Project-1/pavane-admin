@@ -46,7 +46,7 @@ export default function EditCustomer() {
   async function getCustomerByIdHandler() {
     setLoading(true)
     try {
-      const { data } = await customerServices.getUserById(params.id);
+      const { data } = await customerServices.getCustomerById(params.id);
       setLoading(true)
       if (data.success && data.status === 200) {
         setLoading(false);
@@ -116,14 +116,14 @@ export default function EditCustomer() {
         }
       })
       try {
-        const { data } = await customerServices.editUser(params.id, editedData)
+        const { data } = await customerServices.editCustomer(params.id, editedData)
         if (data.success && data.status === 200) {
           setLoading(false);
           var formData = new FormData();
           formData.append("images", uploadImage);
           setLoading(true);
           try {
-            const { data } = typeof uploadImage === "object" && await customerServices.uploadUserImage(params.id, formData)
+            const { data } = typeof uploadImage === "object" && await customerServices.uploadImageCustomer(params.id, formData)
             if (data.success && data.code === 200) {
               setLoading(false);
             }
@@ -150,8 +150,6 @@ export default function EditCustomer() {
   }, [])
 
   let date = (newCustomer.dateOfBirth).split('T')[0]
-
-  console.log(newCustomer.gender);
 
   return <>
     <div className="row">

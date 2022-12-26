@@ -4,7 +4,7 @@ import Navbar from '../../components/Navbar/Navbar'
 import Sidebar from '../../components/Sidebar/Sidebar'
 import Admins from '../../pages/Admins/Admins'
 import Brands from '../../pages/Brands/Brands'
-import Products from '../../pages/Products/Products'
+import Items from '../../pages/Items/Items'
 import Collections from '../../pages/Collections/Collections'
 import Categories from '../../pages/Categories/Categories'
 import Advertisements from '../../pages/Advertisements/Advertisements'
@@ -18,13 +18,13 @@ import CategoryDetails from '../../pages/Categories/CategoryDetails/CategoryDeta
 import EditCategory from '../../pages/Categories/CategoryDetails/EditCategory/EditCategory'
 import BrandDetails from '../../pages/Brands/BrandDetails/BrandDetails'
 import EditBrand from '../../pages/Brands/BrandDetails/EditBrand/EditBrand'
-import AddProduct from '../../pages/Products/AddProduct/AddProduct'
-import ProductDetails from '../../pages/Products/ProductDetails/ProductDetails'
+import AddItem from '../../pages/Items/AddItem/AddItem'
+import ItemDetails from '../../pages/Items/ItemDetails/ItemDetails'
 import AddCollection from '../../pages/Collections/AddCollection/AddCollection'
 import CollectionDetails from '../../pages/Collections/CollectionDetails/CollectionDetails'
 import AddCustomer from '../../pages/Customers/AddCustomer/AddCustomer'
 import CustomerDetails from '../../pages/Customers/CustomerDetails/CustomerDetails'
-import EditProduct from '../../pages/Products/ProductDetails/EditProduct/EditProduct'
+import EditItem from '../../pages/Items/ItemDetails/EditItem/EditItem'
 import AddAdvertisement from '../../pages/Advertisements/AddAdvertisement/AddAdvertisement'
 import AdvertisementDetails from '../../pages/Advertisements/AdvertisementDetails/AdvertisementDetails'
 import EditAdvertisement from '../../pages/Advertisements/AdvertisementDetails/EditAdvertisement/EditAdvertisement'
@@ -55,10 +55,10 @@ export default function Dashboard() {
           <Route path='/brands/:id/edit' element={<EditBrand />} />
           <Route path='/brands/addBrand' element={<AddBrand />} />
 
-          <Route path='/products' element={<Products />} />
-          <Route path='/products/:id' element={<ProductDetails />} />
-          <Route path='/products/:id/edit' element={<EditProduct />} />
-          <Route path='/products/addProduct' element={<AddProduct />} />
+          <Route path='/items' element={<Items />} />
+          <Route path='/items/:id' element={<ItemDetails />} />
+          <Route path='/items/:id/edit' element={<EditItem />} />
+          <Route path='/items/addItem' element={<AddItem />} />
 
           <Route path='/collections' element={<Collections />} />
           <Route path='/collections/:id' element={<CollectionDetails />} />

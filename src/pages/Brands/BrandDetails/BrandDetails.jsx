@@ -18,7 +18,7 @@ export default function BrandDetails() {
   async function getBrandByIdHandler() {
     setLoading(true)
     try {
-      const { data } = await brandServices.getVendorById(params.id);
+      const { data } = await brandServices.getBrandById(params.id);
       setLoading(true)
       if (data.success && data.status === 200) {
         setLoading(false);
@@ -34,7 +34,7 @@ export default function BrandDetails() {
   async function deleteBrandHandler() {
     setLoading(true)
     try {
-      const { data } = await brandServices.deleteVendor(params.id)
+      const { data } = await brandServices.deleteBrand(params.id)
       setLoading(true)
       if (data.success && data.status === 200) {
         setModalShow(false)

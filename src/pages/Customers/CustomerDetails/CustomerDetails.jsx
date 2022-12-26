@@ -17,7 +17,7 @@ export default function CustomerDetails() {
   async function getCustomerByIdHandler() {
     setLoading(true)
     try {
-      const { data } = await customerServices.getUserById(params.id);
+      const { data } = await customerServices.getCustomerById(params.id);
       setLoading(true)
       if (data.success && data.status === 200) {
         setLoading(false);
@@ -32,7 +32,7 @@ export default function CustomerDetails() {
   async function deleteCustomerHandler() {
     setLoading(true)
     try {
-      const { data } = await customerServices.deleteUser(params.id)
+      const { data } = await customerServices.deleteCustomer(params.id)
       setLoading(true)
       if (data.success && data.status === 200) {
         setModalShow(false)
@@ -59,7 +59,6 @@ export default function CustomerDetails() {
         </div>
       </div>
     </div>}
-
     {loading ? (<div className="overlay"><OverlayLoading /></div>) : (
       <div className="row">
         <div className="col-md-12 text-center">
@@ -76,7 +75,7 @@ export default function CustomerDetails() {
           </div>
         </div>
         <div className="col-md-8">
-          <div className="product-details">
+          <div className="item-details">
             <div className="row">
               <div className="col-md-12">
                 <div className="actions">
@@ -86,12 +85,13 @@ export default function CustomerDetails() {
               </div>
             </div>
             <h2>{customer.name}</h2>
-            <p>Customer Email: {customer.email}</p>
-            <p>Customer Date of Birth: {new Date(customer.dateOfBirth).toDateString()}</p>
+            <p>Email: {customer.email}</p>
+            <p>Date of Birth: {new Date(customer.dateOfBirth).toDateString()}</p>
             <p>Phone: {customer.phone}</p>
             <p>Gender: {customer.gender}</p>
             <p>Location: {customer.location}</p>
-            <p>Referral Link: {customer.numberOfPeopleUseReferralLink}</p>
+            <p>Account Type: {customer.accountType}</p>
+            <p>Referral Link: {customer.referralLinkUsage}</p>
           </div>
         </div>
       </div>

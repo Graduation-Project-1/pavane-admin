@@ -15,7 +15,7 @@ export default function Brands() {
   async function getAllBrandsHandler() {
     setLoading(true)
     try {
-      const { data } = await brandServices.getAllVendors();
+      const { data } = await brandServices.getAllBrands();
       setLoading(true)
       if (data.success && data.status === 200) {
         setLoading(false);

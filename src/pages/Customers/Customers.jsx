@@ -15,7 +15,7 @@ export default function Customers() {
   async function getAllCustomersHandler() {
     setLoading(true)
     try {
-      const { data } = await customerServices.getAllUsers();
+      const { data } = await customerServices.getAllCustomers();
       setLoading(true)
       if (data.success && data.status === 200) {
         setLoading(false);

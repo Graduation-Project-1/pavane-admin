@@ -1,11 +1,11 @@
-.add-product-page {
+.add-item-page {
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #e9ecef;
   padding: 20px 0;
 
-  .add-product-card {
+  .add-item-card {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -20,12 +20,12 @@
       margin-bottom: 0;
     }
 
-    .add-product-input {
+    .add-item-input {
       margin-bottom: 10px;
       width: 320px;
     }
 
-    .add-product-button {
+    .add-item-button {
       width: 100%;
       padding: 7px;
       border: none;

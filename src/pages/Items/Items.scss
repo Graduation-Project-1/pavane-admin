@@ -1,12 +1,12 @@
-.products {
+.items {
   height: 100vh;
 
-  .add-product {
+  .add-item {
     display: flex;
     justify-content: flex-end;
     margin: 20px;
 
-    .add-product-btn {
+    .add-item-btn {
       background-color: #ffa300;
       border: 1px solid #ffa300;
       color: var(--secondaryColor);
@@ -23,7 +23,7 @@
     }
   }
 
-  .product-data {
+  .item-data {
     display: flex;
     justify-content: center;
 

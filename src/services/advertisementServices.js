@@ -6,7 +6,7 @@ let advertisementServices = {
     return response
   },
 
-  uploadAdvertisementImage: async (id, obj) => {
+  uploadImageAdvertisement: async (id, obj) => {
     const response = await Axios.post(`uploadImageAdvertisement/${id}`, obj)
     return response
   },

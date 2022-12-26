@@ -76,15 +76,15 @@ export default function AddBrand() {
           phone: [newBrand.phone],
           categoryList: getFinalCategories()
         }
-        const { data } = await brandServices.addVendor(brandData)
-        if (data.success && data.message === "vendorAdded") {
+        const { data } = await brandServices.addBrand(brandData)
+        if (data.success && data.message === "BrandAdded") {
           setLoading(false);
           let brandID = data.Data._id
           var formData = new FormData();
           formData.append("images", uploadImage);
           setLoading(true)
           try {
-            const { data } = await brandServices.uploadBrandImage(brandID, formData)
+            const { data } = await brandServices.uploadImageBrand(brandID, formData)
             setLoading(true)
             if (data.success && data.status === 200) {
               setLoading(false);

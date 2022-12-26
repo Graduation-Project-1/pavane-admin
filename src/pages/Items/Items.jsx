@@ -1,25 +1,25 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import OverlayLoading from '../../components/OverlayLoading/OverlayLoading'
-import productServices from '../../services/productServices'
-import './Products.scss'
+import itemServices from '../../services/itemServices'
+import './Items.scss'
 
-export default function Products() {
+export default function Items() {
 
   const navigate = useNavigate()
 
   const [loading, setLoading] = useState(false)
-  const [products, setProducts] = useState([])
+  const [items, setItems] = useState([])
   const [errorMessage, setErrorMessage] = useState("");
 
-  async function getAllProductsHandler() {
+  async function getAllItemsHandler() {
     setLoading(true)
     try {
-      const { data } = await productServices.getAllProducts();
+      const { data } = await itemServices.getAllItems();
       setLoading(true)
       if (data.success && data.status === 200) {
         setLoading(false);
-        setProducts(data.Data)
+        setItems(data.Data)
       }
     } catch (e) {
       setLoading(false);
@@ -28,18 +28,18 @@ export default function Products() {
   }
 
   useEffect(() => {
-    getAllProductsHandler()
+    getAllItemsHandler()
   }, [])
 
   return <>
-    <div className="products">
+    <div className="items">
       <div className="row">
         <div className="col-md-12">
-          <div className="add-product">
+          <div className="add-item">
             <button
-              className='add-product-btn'
-              onClick={() => { navigate(`/products/addProduct`) }}>
-              Add Product
+              className='add-item-btn'
+              onClick={() => { navigate(`/items/addItem`) }}>
+              Add Item
             </button>
           </div>
         </div>
@@ -54,7 +54,7 @@ export default function Products() {
           }
         </div>
         <div className="col-md-12">
-          <div className="product-data">
+          <div className="item-data">
             <table className="table table-striped table-hover my-table">
               <thead>
                 <tr>
@@ -68,14 +68,14 @@ export default function Products() {
               <tbody>
                 {loading ? (<OverlayLoading />) :
                   (
-                    products.map((product, index) => {
+                    items.map((item, index) => {
                       return (
-                        <tr key={product._id} onClick={() => navigate(`/products/${product._id}`)}>
+                        <tr key={item._id} onClick={() => navigate(`/items/${item._id}`)}>
                           <td>{index + 1}</td>
-                          <td>{product.name}</td>
-                          <td>{product.gender}</td>
-                          <td>{product.price}</td>
-                          <td>{product.numberOfLikes}</td>
+                          <td>{item.name}</td>
+                          <td>{item.gender}</td>
+                          <td>{item.price}</td>
+                          <td>{item.numberOfLikes}</td>
                         </tr>
                       )
                     })

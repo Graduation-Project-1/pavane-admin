@@ -1,33 +1,33 @@
 import Axios from './Axios';
 
 let customerServices = {
-  addUser: async (obj) => {
-    const response = await Axios.post(`addUser`, obj)
+  addCustomer: async (obj) => {
+    const response = await Axios.post(`addCustomer`, obj)
     return response
   },
 
-  uploadUserImage: async (id, obj) => {
-    const response = await Axios.post(`uploadImageUser/${id}`, obj)
+  uploadImageCustomer: async (id, obj) => {
+    const response = await Axios.post(`uploadImageCustomer/${id}`, obj)
     return response
   },
 
-  getUserById: async (id) => {
-    const response = await Axios.get(`getUserById/${id}`)
+  getCustomerById: async (id) => {
+    const response = await Axios.get(`getCustomerById/${id}`)
     return response
   },
 
-  editUser: async (id, obj) => {
-    const response = await Axios.put(`updateUser/${id}`, obj)
+  editCustomer: async (id, obj) => {
+    const response = await Axios.put(`updateCustomer/${id}`, obj)
     return response
   },
 
-  deleteUser: async (id) => {
-    const response = await Axios.delete(`deleteUser/${id}`)
+  deleteCustomer: async (id) => {
+    const response = await Axios.delete(`deleteCustomer/${id}`)
     return response
   },
 
-  getAllUsers: async (page = 1, size = 10) => {
-    const response = await Axios.get(`getAllUsers?page=${page}&size=${size}`)
+  getAllCustomers: async (page = 1, size = 10) => {
+    const response = await Axios.get(`getAllCustomers?page=${page}&size=${size}`)
     return response
   },
 }

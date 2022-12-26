@@ -78,15 +78,15 @@ export default function AddCustomer() {
           gender: gender,
           location: location,
         }
-        const { data } = await customerServices.addUser(customerData)
-        if (data.success && data.message === "userAdded") {
+        const { data } = await customerServices.addCustomer(customerData)
+        if (data.success && data.message === "customerAdded") {
           setLoading(false);
           let customerID = data.Data._id
           var formData = new FormData();
           formData.append("images", uploadImage);
           setLoading(true)
           try {
-            const { data } = await customerServices.uploadUserImage(customerID, formData)
+            const { data } = await customerServices.uploadImageCustomer(customerID, formData)
             setLoading(true)
             if (data.success && data.status === 200) {
               setLoading(false);

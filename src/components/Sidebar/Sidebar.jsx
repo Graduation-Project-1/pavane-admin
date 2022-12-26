@@ -8,7 +8,7 @@ export default function Sidebar() {
       <ul>
         <li><NavLink to="/admins" className={(navData) => navData.isActive ? 'active' : 'not-active'}><div>Admins</div></NavLink></li>
         <li><NavLink to="/brands" className={(navData) => navData.isActive ? 'active' : 'not-active'}><div>Brands</div></NavLink></li>
-        <li><NavLink to="/products" className={(navData) => navData.isActive ? 'active' : 'not-active'}><div>Products</div></NavLink></li>
+        <li><NavLink to="/items" className={(navData) => navData.isActive ? 'active' : 'not-active'}><div>Items</div></NavLink></li>
         <li><NavLink to="/collections" className={(navData) => navData.isActive ? 'active' : 'not-active'}><div>Collections</div></NavLink></li>
         <li><NavLink to="/categories" className={(navData) => navData.isActive ? 'active' : 'not-active'}><div>Categories</div></NavLink></li>
         <li><NavLink to="/advertisements" className={(navData) => navData.isActive ? 'active' : 'not-active'}><div>Advertisements</div></NavLink></li>

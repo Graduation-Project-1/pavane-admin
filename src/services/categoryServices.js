@@ -6,7 +6,7 @@ let categoryServices = {
     return response
   },
 
-  uploadCategoryImage: async (id, obj) => {
+  uploadImageCategory: async (id, obj) => {
     const response = await Axios.post(`uploadImageCategory/${id}`, obj)
     return response
   },
