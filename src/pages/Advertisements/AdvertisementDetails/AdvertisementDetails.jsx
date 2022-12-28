@@ -72,7 +72,7 @@ export default function AdvertisementDetails() {
         </div>
         <div className="col-md-4">
           <div className="image">
-            <img src={advertisement.image} alt="Advertisement Image" />
+            <img src={`https://graduation-project-23.s3.amazonaws.com/${advertisement.image}`} alt="Advertisement Image" />
           </div>
         </div>
         <div className="col-md-8">

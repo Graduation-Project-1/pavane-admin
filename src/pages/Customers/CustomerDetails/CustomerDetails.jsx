@@ -71,7 +71,7 @@ export default function CustomerDetails() {
         </div>
         <div className="col-md-4">
           <div className="image">
-            <img src={customer.image} alt="Customer Cover" />
+            <img src={`https://graduation-project-23.s3.amazonaws.com/${customer.image}`} alt="Customer Cover" />
           </div>
         </div>
         <div className="col-md-8">

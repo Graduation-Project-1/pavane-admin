@@ -74,7 +74,7 @@ export default function ItemDetails() {
         </div>
         <div className="col-md-4">
           <div className="image">
-            <img src={item.cover} alt="Item Cover" />
+            <img src={`https://graduation-project-23.s3.amazonaws.com/${item.cover}`} alt="Item Cover" />
           </div>
         </div>
         <div className="col-md-8">
