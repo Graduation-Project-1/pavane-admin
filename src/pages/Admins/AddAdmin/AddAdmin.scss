@@ -18,6 +18,21 @@
       margin-bottom: 0;
     }
 
+    .password-field {
+      position: relative;
+
+      .show-password-icon {
+        position: absolute;
+        top: 70%;
+        right: 10px;
+        transform: translateY(-50%);
+        cursor: pointer;
+        [fill] {
+          fill: #242424;
+        }
+      }
+    }
+
     .add-admin-input {
       margin-bottom: 10px;
       width: 320px;

@@ -2,6 +2,8 @@ import Joi from 'joi';
 import React, { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import customerServices from '../../../services/customerServices';
+import { ReactComponent as EyeOPen } from "../../../assets/eye_open.svg";
+import { ReactComponent as EyeClose } from "../../../assets/eye_close.svg";
 import './AddCustomer.scss'
 
 export default function AddCustomer() {
@@ -15,6 +17,9 @@ export default function AddCustomer() {
   const [gender, setGender] = useState("male");
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [location, setLocation] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  let type = "password"
 
   const [newCustomer, setNewCustomer] = useState({
     name: "",
@@ -165,7 +170,7 @@ export default function AddCustomer() {
                 name="name"
                 id="name"
               />
-              <label htmlFor="name">Email</label>
+              <label htmlFor="email">Email</label>
               <input
                 onChange={getNewCustomerData}
                 className='form-control add-customer-input'
@@ -173,15 +178,34 @@ export default function AddCustomer() {
                 name="email"
                 id="email"
               />
-              <label htmlFor="name">Password</label>
-              <input
-                onChange={getNewCustomerData}
-                className='form-control add-customer-input'
-                type="password"
-                name="password"
-                id="password"
-              />
-              <label htmlFor="name">Phone</label>
+              <div className="password-field">
+                {type === "password" ? (
+                  showPassword ? (
+                    <EyeOPen
+                      onClick={() => {
+                        setShowPassword((prev) => !prev);
+                      }}
+                      className="show-password-icon"
+                    />
+                  ) : (
+                    <EyeClose
+                      onClick={() => {
+                        setShowPassword((prev) => !prev);
+                      }}
+                      className="show-password-icon"
+                    />
+                  )
+                ) : null}
+                <label htmlFor="password">Password</label>
+                <input
+                  onChange={getNewCustomerData}
+                  className='form-control add-customer-input'
+                  type={!type === "password" ? type : showPassword ? "text" : type}
+                  name="password"
+                  id="password"
+                />
+              </div>
+              <label htmlFor="phone">Phone</label>
               <input
                 onChange={getNewCustomerData}
                 className='form-control add-customer-input'
@@ -215,7 +239,7 @@ export default function AddCustomer() {
                   <span>Female</span>
                 </label>
               </div>
-              <label htmlFor="">Date of birth</label>
+              <label htmlFor="dateOfBirth">Date of birth</label>
               <div className="date add-customer-input">
                 <input
                   onChange={(e) => { setDateOfBirth(e.target.value); }}

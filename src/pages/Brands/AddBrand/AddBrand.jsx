@@ -3,6 +3,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import brandServices from '../../../services/brandServices';
 import categoryServices from '../../../services/categoryServices';
+import { ReactComponent as EyeOPen } from "../../../assets/eye_open.svg";
+import { ReactComponent as EyeClose } from "../../../assets/eye_close.svg";
 import './AddBrand.scss'
 
 export default function AddBrand() {
@@ -15,6 +17,9 @@ export default function AddBrand() {
   const [uploadImage, setUploadImage] = useState(null);
   const [categories, setCategories] = useState([])
   const [selectedCategories, setSelectedCategories] = useState([])
+  const [showPassword, setShowPassword] = useState(false);
+
+  let type = "password"
 
   const [newBrand, setNewBrand] = useState({
     name: "",
@@ -203,7 +208,7 @@ export default function AddBrand() {
                 name="name"
                 id="name"
               />
-              <label htmlFor="name">Email</label>
+              <label htmlFor="email">Email</label>
               <input
                 onChange={getNewBrandData}
                 className='form-control add-brand-input'
@@ -211,15 +216,34 @@ export default function AddBrand() {
                 name="email"
                 id="email"
               />
-              <label htmlFor="name">Password</label>
-              <input
-                onChange={getNewBrandData}
-                className='form-control add-brand-input'
-                type="password"
-                name="password"
-                id="password"
-              />
-              <label htmlFor="name">Phone</label>
+              <div className="password-field">
+                {type === "password" ? (
+                  showPassword ? (
+                    <EyeOPen
+                      onClick={() => {
+                        setShowPassword((prev) => !prev);
+                      }}
+                      className="show-password-icon"
+                    />
+                  ) : (
+                    <EyeClose
+                      onClick={() => {
+                        setShowPassword((prev) => !prev);
+                      }}
+                      className="show-password-icon"
+                    />
+                  )
+                ) : null}
+                <label htmlFor="password">Password</label>
+                <input
+                  onChange={getNewBrandData}
+                  className='form-control add-brand-input'
+                  type={!type === "password" ? type : showPassword ? "text" : type}
+                  name="password"
+                  id="password"
+                />
+              </div>
+              <label htmlFor="phone">Phone</label>
               <input
                 onChange={getNewBrandData}
                 className='form-control add-brand-input'

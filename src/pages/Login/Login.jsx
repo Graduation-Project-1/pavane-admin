@@ -4,6 +4,8 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import authServices from '../../services/authServices';
 import { authActions } from '../../store/auth-slice'
+import { ReactComponent as EyeOPen } from "../../assets/eye_open.svg";
+import { ReactComponent as EyeClose } from "../../assets/eye_close.svg";
 import './Login.scss'
 
 export default function Login() {
@@ -14,6 +16,9 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [errorList, setErrorList] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  let type = "password"
 
   const [adminData, setAdminData] = useState({
     email: "",
@@ -31,11 +36,10 @@ export default function Login() {
       email: Joi.string()
         .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
         .required(),
-      password: Joi.string().required().pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/).messages({
+      password: Joi.string().required().messages({
         "string.base": "please enter a valid password",
         "any.required": "password must be entered",
-        "string.empty": "password cannot be empty",
-        "string.pattern.base": "Wrong Password"
+        "string.empty": "password cannot be empty"
       })
     });
     return schema.validate(adminData, { abortEarly: false });
@@ -100,14 +104,33 @@ export default function Login() {
                 name="email"
                 id="email"
               />
-              <label htmlFor="password">Password</label>
-              <input
-                onChange={getAdminData}
-                className='form-control login-input'
-                type="password"
-                name="password"
-                id="password"
-              />
+              <div className="password-field">
+                {type === "password" ? (
+                  showPassword ? (
+                    <EyeOPen
+                      onClick={() => {
+                        setShowPassword((prev) => !prev);
+                      }}
+                      className="show-password-icon"
+                    />
+                  ) : (
+                    <EyeClose
+                      onClick={() => {
+                        setShowPassword((prev) => !prev);
+                      }}
+                      className="show-password-icon"
+                    />
+                  )
+                ) : null}
+                <label htmlFor="password">Password</label>
+                <input
+                  onChange={getAdminData}
+                  className='form-control login-input'
+                  type={!type === "password" ? type : showPassword ? "text" : type}
+                  name="password"
+                  id="password"
+                />
+              </div>
               <button className='login-button'>
                 {loading ?
                   (<i className="fas fa-spinner fa-spin "></i>)

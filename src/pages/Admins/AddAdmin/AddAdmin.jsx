@@ -2,6 +2,8 @@ import Joi from 'joi';
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import adminServices from '../../../services/adminServices';
+import { ReactComponent as EyeOPen } from "../../../assets/eye_open.svg";
+import { ReactComponent as EyeClose } from "../../../assets/eye_close.svg";
 import './AddAdmin.scss'
 
 export default function AddAdmin() {
@@ -12,6 +14,9 @@ export default function AddAdmin() {
   const [errorList, setErrorList] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [isAdded, setIsAdded] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  let type = "password"
 
   const [newAdmin, setNewAdmin] = useState({
     name: "",
@@ -116,14 +121,33 @@ export default function AddAdmin() {
                 name="email"
                 id="email"
               />
-              <label htmlFor="password">Password</label>
-              <input
-                onChange={getNewAdminData}
-                className='form-control add-admin-input'
-                type="password"
-                name="password"
-                id="password"
-              />
+              <div className="password-field">
+                {type === "password" ? (
+                  showPassword ? (
+                    <EyeOPen
+                      onClick={() => {
+                        setShowPassword((prev) => !prev);
+                      }}
+                      className="show-password-icon"
+                    />
+                  ) : (
+                    <EyeClose
+                      onClick={() => {
+                        setShowPassword((prev) => !prev);
+                      }}
+                      className="show-password-icon"
+                    />
+                  )
+                ) : null}
+                <label htmlFor="password">Password</label>
+                <input
+                  onChange={getNewAdminData}
+                  className='form-control add-admin-input'
+                  type={!type === "password" ? type : showPassword ? "text" : type}
+                  name="password"
+                  id="password"
+                />
+              </div>
               <button className='add-admin-button'>
                 {loading ?
                   (<i className="fas fa-spinner fa-spin "></i>)
