@@ -14,6 +14,7 @@ export default function ItemDetails() {
   const [categories, setCategories] = useState([])
   const [errorMessage, setErrorMessage] = useState("");
   const [modalShow, setModalShow] = useState(false)
+  const [seeMore, setSeeMore] = useState(false)
 
   async function getItemByIdHandler() {
     setLoading(true)
@@ -88,13 +89,21 @@ export default function ItemDetails() {
               </div>
             </div>
             <h2>{item.name}</h2>
-            <p>Description: {item.description}</p>
+            <div>
+              {item?.description?.length >= 500 ? (
+                <div className='seeMore'>
+                  {seeMore ? (<p className='Description'>Description: {item.description} <button onClick={() => { setSeeMore(false) }}>See Less</button></p>) : (<p className='Description'>Description: {item.description.slice(0, 500)}- <button onClick={() => { setSeeMore(true) }}>See More</button></p>)}
+                </div>
+              ) : (
+                <p className='Description'>Description: {item.description}</p>
+              )}
+            </div>
+
             <p>Brand: {item?.brandId?.name}</p>
             <p>Price: {item.price}</p>
-            <p>Discount: {item.discountRate}</p>
+            {/* <p>Discount: {item.discountRate}</p> */}
             <p>Gender: {item.gender}</p>
             <p>Rate: {item.averageRate}</p>
-            {item.isAdult ? <p>For Adults: Yes</p> : <p>For Adults: No</p>}
             <p>Available Sizes: {item.sizes + ", "}</p>
             <p>Available Colors: {item.colors + ", "}</p>
             <p>Available Categories: {

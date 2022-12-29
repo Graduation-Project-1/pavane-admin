@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import OverlayLoading from '../../components/OverlayLoading/OverlayLoading'
+import Pagination from "react-js-pagination";
 import brandServices from '../../services/brandServices'
 import './Brands.scss'
 
@@ -11,15 +12,23 @@ export default function Brands() {
   const [loading, setLoading] = useState(false)
   const [brands, setBrands] = useState([])
   const [errorMessage, setErrorMessage] = useState("");
+  const [currentPage, setCurrentPage] = useState(1)
+  const [postPerPage, setPostPerPage] = useState(10)
+  const [totalResult, setTotalResult] = useState(0)
 
-  async function getAllBrandsHandler() {
+  function handlePageChange(pageNumber) {
+    setCurrentPage(pageNumber)
+  }
+
+  async function getAllBrandsHandler(currentPage) {
     setLoading(true)
     try {
-      const { data } = await brandServices.getAllBrands();
+      const { data } = await brandServices.getAllBrands(currentPage);
       setLoading(true)
       if (data.success && data.status === 200) {
         setLoading(false);
         setBrands(data.Data)
+        setTotalResult(data.totalResult)
       }
     } catch (e) {
       setLoading(false);
@@ -28,8 +37,8 @@ export default function Brands() {
   }
 
   useEffect(() => {
-    getAllBrandsHandler()
-  }, [])
+    getAllBrandsHandler(currentPage)
+  }, [currentPage])
 
   return <>
     <div className="brands">
@@ -45,6 +54,14 @@ export default function Brands() {
         </div>
       </div>
       <div className="row">
+        <div className="col-md-12 text-center">
+          {
+            errorMessage ?
+              (<div className="alert alert-danger myalert">
+                {errorMessage}
+              </div>) : ""
+          }
+        </div>
         <div className="col-md-12">
           <div className="brand-data">
             <table className="table table-striped table-hover my-table">
@@ -76,6 +93,17 @@ export default function Brands() {
             </table>
           </div>
         </div>
+      </div>
+      <div className='pagination-nav'>
+        <Pagination
+          activePage={currentPage}
+          itemsCountPerPage={postPerPage}
+          totalItemsCount={totalResult}
+          pageRangeDisplayed={10}
+          onChange={handlePageChange}
+          itemClass="page-item"
+          linkClass="page-link"
+        />
       </div>
     </div>
   </>

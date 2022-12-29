@@ -39,10 +39,21 @@
     text-align: center;
     color: #242424;
     text-transform: uppercase;
+    margin-top: 7px;
   }
 
   p {
     color: #242424;
+  }
+
+  .seeMore {
+    button {
+      border: none;
+      color: #fff;
+      padding: 3px 7px;
+      border-radius: 5px;
+      background-color: #ffc107;
+    }
   }
 }
 

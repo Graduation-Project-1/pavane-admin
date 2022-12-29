@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import OverlayLoading from '../../components/OverlayLoading/OverlayLoading'
 import categoryServices from '../../services/categoryServices'
+import Pagination from "react-js-pagination";
 import './Categories.scss'
 
 export default function Categories() {
@@ -11,15 +12,23 @@ export default function Categories() {
   const [loading, setLoading] = useState(false)
   const [categories, setCategories] = useState([])
   const [errorMessage, setErrorMessage] = useState("");
+  const [currentPage, setCurrentPage] = useState(1)
+  const [postPerPage, setPostPerPage] = useState(10)
+  const [totalResult, setTotalResult] = useState(0)
 
-  async function getAllCategoriesHandler() {
+  function handlePageChange(pageNumber) {
+    setCurrentPage(pageNumber)
+  }
+
+  async function getAllCategoriesHandler(currentPage) {
     setLoading(true)
     try {
-      const { data } = await categoryServices.getAllCategories();
+      const { data } = await categoryServices.getAllCategories(currentPage);
       setLoading(true)
       if (data.success && data.status === 200) {
         setLoading(false);
         setCategories(data.Data)
+        setTotalResult(data.totalResult)
       }
     } catch (e) {
       setLoading(false);
@@ -28,8 +37,8 @@ export default function Categories() {
   }
 
   useEffect(() => {
-    getAllCategoriesHandler()
-  }, [])
+    getAllCategoriesHandler(currentPage)
+  }, [currentPage])
 
   return <>
     <div className="categories">
@@ -69,7 +78,7 @@ export default function Categories() {
                       return (
                         <tr key={category._id} onClick={() => navigate(`/categories/${category._id}`)}>
                           <td>{index + 1}</td>
-                          <td>{category.name}</td>
+                          <td className='name'>{category.name}</td>
                         </tr>
                       )
                     })
@@ -79,6 +88,19 @@ export default function Categories() {
           </div>
         </div>
       </div>
+
+      <div className='pagination-nav'>
+        <Pagination
+          activePage={currentPage}
+          itemsCountPerPage={postPerPage}
+          totalItemsCount={totalResult}
+          pageRangeDisplayed={10}
+          onChange={handlePageChange}
+          itemClass="page-item"
+          linkClass="page-link"
+        />
+      </div>
+
     </div>
   </>
 }
