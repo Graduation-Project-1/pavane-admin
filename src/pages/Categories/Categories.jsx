@@ -36,6 +36,23 @@ export default function Categories() {
     }
   }
 
+  async function deleteCategoryHandler(id) {
+    setLoading(true)
+    try {
+      const { data } = await categoryServices.deleteCategory(id)
+      setLoading(true)
+      if (data.success && data.status === 200) {
+        // setModalShow(false)
+        setLoading(false);
+        // navigate(`/categories`)
+        getAllCategoriesHandler()
+      }
+    } catch (e) {
+      setLoading(false);
+      setErrorMessage(e.response.data.message);
+    }
+  }
+
   useEffect(() => {
     getAllCategoriesHandler(currentPage)
   }, [currentPage])
@@ -69,6 +86,7 @@ export default function Categories() {
                 <tr>
                   <th>#</th>
                   <th>Name</th>
+                  <th>Remove</th>
                 </tr>
               </thead>
               <tbody>
@@ -79,6 +97,7 @@ export default function Categories() {
                         <tr key={category._id} onClick={() => navigate(`/categories/${category._id}`)}>
                           <td>{index + 1}</td>
                           <td className='name'>{category.name}</td>
+                          <td className='btn-danger' onClick={(e) => {e.stopPropagation() ;deleteCategoryHandler(category._id)}}>Remove</td>
                         </tr>
                       )
                     })
