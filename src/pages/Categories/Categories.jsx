@@ -45,7 +45,7 @@ export default function Categories() {
         // setModalShow(false)
         setLoading(false);
         // navigate(`/categories`)
-        getAllCategoriesHandler()
+        getAllCategoriesHandler(currentPage)
       }
     } catch (e) {
       setLoading(false);
