@@ -78,7 +78,7 @@ export default function BrandDetails() {
           </div>
         </div>
         <div className="col-md-8">
-          <div className="data">
+          <div className="item-details">
             <div className="row">
               <div className="col-md-12">
                 <div className="actions">
