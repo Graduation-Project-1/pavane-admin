@@ -94,10 +94,11 @@ export default function Categories() {
                   (
                     categories.map((category, index) => {
                       return (
-                        <tr key={category._id} onClick={() => navigate(`/categories/${category._id}`)}>
+                        <tr key={category._id}
+                          onClick={() => navigate(`/categories/${category._id}`)}>
                           <td>{index + 1}</td>
                           <td className='name'>{category.name}</td>
-                          <td className='btn-danger' onClick={(e) => {e.stopPropagation() ;deleteCategoryHandler(category._id)}}>Remove</td>
+                          <td className='btn-danger' onClick={(e) => { e.stopPropagation(); deleteCategoryHandler(category._id) }}>Remove</td>
                         </tr>
                       )
                     })

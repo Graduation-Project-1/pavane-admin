@@ -1,20 +1,41 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 import { authActions } from '../../store/auth-slice'
 import NavLogo from '../../assets/LOGO-01.png'
 import './Navbar.scss'
 import WelcomeImage from '../../assets/Welcome.jpg'
+import adminServices from '../../services/adminServices';
 
 export default function Navbar() {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
+  const [name, setName] = useState('')
+  const [errorrMessage, setErrorMessage] = useState('')
+
+  async function getAdminHandler() {
+    try {
+      const { data } = await adminServices.getAdmin();
+      if (data.success && data.status === 200) {
+        setName(data.Data.name)
+      }
+    } catch (e) {
+      setErrorMessage(e.response.data.message);
+    }
+  }
+
   function logoutHandler() {
     localStorage.removeItem("AdminToken");
     dispatch(authActions.logout());
   }
+
+  useEffect(() => {
+    getAdminHandler()
+  }, [])
+
+
 
   return <>
     <nav className="navbar navbar-expand-lg mynav">
@@ -28,7 +49,7 @@ export default function Navbar() {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <a className="nav-link"><span>Welcome</span> Ahmed Samir</a>
+              <a className="nav-link"><span>Welcome</span> {name}</a>
             </li>
           </ul>
           <ul className="navbar-nav ms-auto mb-2 mb-lg-0">

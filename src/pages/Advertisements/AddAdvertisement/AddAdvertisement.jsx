@@ -74,6 +74,8 @@ export default function AddAdvertisement() {
             setErrorMessage(error);
           }
           navigate("/advertisements");
+        } else {
+          console.log(data);
         }
       } catch (error) {
         setLoading(false);

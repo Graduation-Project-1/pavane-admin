@@ -6,6 +6,11 @@ let adminServices = {
     return response
   },
 
+  getAdmin: async () => {
+    const response = await Axios.get(`getAdmin`)
+    return response
+  },
+
   getAllAdmins: async (page = 1, size = 10) => {
     const response = await Axios.get(`getAllAdmins?page=${page}&size=${size}`)
     return response

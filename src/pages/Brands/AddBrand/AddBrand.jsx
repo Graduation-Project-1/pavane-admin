@@ -15,6 +15,7 @@ export default function AddBrand() {
   const [errorList, setErrorList] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [uploadImage, setUploadImage] = useState(null);
+  const [uploadCover, setUploadCover] = useState(null);
   const [categories, setCategories] = useState([])
   const [selectedCategories, setSelectedCategories] = useState([])
   const [showPassword, setShowPassword] = useState(false);
@@ -29,8 +30,14 @@ export default function AddBrand() {
   })
 
   const ref = useRef();
+  const coverRef = useRef();
+
   const imageUploader = (e) => {
     ref.current.click();
+  };
+
+  const coverUploader = (e) => {
+    coverRef.current.click();
   };
 
   function getNewBrandData(e) {
@@ -90,6 +97,19 @@ export default function AddBrand() {
           setLoading(true)
           try {
             const { data } = await brandServices.uploadImageBrand(brandID, formData)
+            setLoading(true)
+            if (data.success && data.status === 200) {
+              setLoading(false);
+            }
+          } catch (error) {
+            setLoading(false);
+            setErrorMessage(error);
+          }
+          var formDataCover = new FormData();
+          formDataCover.append("images", uploadCover);
+          setLoading(true)
+          try {
+            const { data } = await brandServices.uploadCoverImageBrand(brandID, formDataCover)
             setLoading(true)
             if (data.success && data.status === 200) {
               setLoading(false);
@@ -196,6 +216,37 @@ export default function AddBrand() {
                 htmlFor="upload-img"
               >
                 Add Image
+              </label>
+            </div>
+
+            <div className="main-image-label">
+              {uploadCover && (
+                <img
+                  src={uploadCover ? URL.createObjectURL(uploadCover) : null}
+                  alt="imag-viewer"
+                  className="uploaded-img"
+                  onClick={() => {
+                    window.open(
+                      uploadCover ? URL.createObjectURL(uploadCover) : null
+                    );
+                  }}
+                />
+              )}
+              <input
+                className="main-input-image"
+                type="file"
+                name="upload-img"
+                ref={coverRef}
+                onChange={(e) => {
+                  setUploadCover(e.target.files[0]);
+                }}
+              />
+              <label
+                className="main-label-image"
+                onClick={coverUploader}
+                htmlFor="upload-img"
+              >
+                Add Cover
               </label>
             </div>
 

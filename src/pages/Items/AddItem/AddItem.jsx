@@ -314,50 +314,93 @@ export default function AddItem() {
                 </label>
               </div>
               <div className="check add-item-input">
-                <input type="checkbox" id="isAdult" onChange={(e) => { setIsAdult(e.target.checked) }} />
+                <input
+                  type="checkbox"
+                  id="isAdult"
+                  onChange={(e) => { setIsAdult(e.target.checked) }} />
                 <label htmlFor='isAdult'>For Adults</label>
               </div>
               <label htmlFor="">Avaliable Sizes</label>
               <div className="check">
-                <input value='xs' type="checkbox" id="xs" onChange={(e) => { setXsSize(e.target.checked) }} />
+                <input
+                  value='xs'
+                  type="checkbox"
+                  id="xs"
+                  onChange={(e) => { setXsSize(e.target.checked) }} />
                 <label htmlFor='xs'>XS</label>
               </div>
               <div className="check">
-                <input value='s' type="checkbox" id="s" onChange={(e) => { setSSize(e.target.checked) }} />
+                <input
+                  value='s'
+                  type="checkbox"
+                  id="s"
+                  onChange={(e) => { setSSize(e.target.checked) }} />
                 <label htmlFor='s'>S</label>
               </div>
               <div className="check">
-                <input value='m' type="checkbox" id="m" onChange={(e) => { setMSize(e.target.checked) }} />
+                <input
+                  value='m'
+                  type="checkbox"
+                  id="m"
+                  onChange={(e) => { setMSize(e.target.checked) }} />
                 <label htmlFor='m'>M</label>
               </div>
               <div className="check">
-                <input value='l' type="checkbox" id="l" onChange={(e) => { setLSize(e.target.checked) }} />
+                <input
+                  value='l'
+                  type="checkbox"
+                  id="l"
+                  onChange={(e) => { setLSize(e.target.checked) }} />
                 <label htmlFor='l'>L</label>
               </div>
               <div className="check">
-                <input value='xl' type="checkbox" id="xl" onChange={(e) => { setXLSize(e.target.checked) }} />
+                <input
+                  value='xl'
+                  type="checkbox"
+                  id="xl"
+                  onChange={(e) => { setXLSize(e.target.checked) }} />
                 <label htmlFor='xl'>XL</label>
               </div>
               <div className="check add-item-input">
-                <input value='xxl' type="checkbox" id="xxl" onChange={(e) => { setXXLSize(e.target.checked) }} />
+                <input
+                  value='xxl'
+                  type="checkbox"
+                  id="xxl"
+                  onChange={(e) => { setXXLSize(e.target.checked) }} />
                 <label htmlFor='xxl'>XXL</label>
               </div>
 
               <label htmlFor="">Avaliable Colors</label>
               <div className="check">
-                <input value='red' type="checkbox" id="red" onChange={(e) => { setRedColor(e.target.checked) }} />
+                <input
+                  value='red'
+                  type="checkbox"
+                  id="red"
+                  onChange={(e) => { setRedColor(e.target.checked) }} />
                 <label htmlFor='red'><div className='red-color'></div></label>
               </div>
               <div className="check">
-                <input value='green' type="checkbox" id="green" onChange={(e) => { setGreenColor(e.target.checked) }} />
+                <input
+                  value='green'
+                  type="checkbox"
+                  id="green"
+                  onChange={(e) => { setGreenColor(e.target.checked) }} />
                 <label htmlFor='green'><div className='green-color'></div></label>
               </div>
               <div className="check">
-                <input value='blue' type="checkbox" id="blue" onChange={(e) => { setBlueColor(e.target.checked) }} />
+                <input
+                  value='blue'
+                  type="checkbox"
+                  id="blue"
+                  onChange={(e) => { setBlueColor(e.target.checked) }} />
                 <label htmlFor='blue'><div className='blue-color'></div></label>
               </div>
               <div className="check add-item-input">
-                <input value='black' type="checkbox" id="black" onChange={(e) => { setBlackColor(e.target.checked) }} />
+                <input
+                  value='black'
+                  type="checkbox"
+                  id="black"
+                  onChange={(e) => { setBlackColor(e.target.checked) }} />
                 <label htmlFor='black'><div className='black-color'></div></label>
               </div>
 
@@ -366,14 +409,19 @@ export default function AddItem() {
                 categories.map((category) => {
                   return (
                     <div className="check" key={category._id}>
-                      <input type="checkbox" id={category.name} onChange={(e) => { toggleSelectedCategoriesHandler(category._id) }} />
+                      <input type="checkbox" id={category.name}
+                        onChange={(e) => { toggleSelectedCategoriesHandler(category._id) }} />
                       <label htmlFor={category.name}>{category.name}</label>
                     </div>
                   )
                 })
               }
               <label>Select Brand</label>
-              <select onChange={(e) => { setBrand(e.target.value) }} className='form-control add-customer-input' id="brand" name="brand" title='brand'>
+              <select onChange={(e) => { setBrand(e.target.value) }}
+                className='form-control add-customer-input'
+                id="brand"
+                name="brand"
+                title='brand'>
                 <option defaultValue='City'>-- Brand --</option>
                 {brands.map((brand) => {
                   return (

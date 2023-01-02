@@ -57,8 +57,14 @@ export default function ItemDetails() {
       <div className="overlay-box">
         <h3>Are you sure you want to delete?</h3>
         <div className="modal-buttons">
-          <div onClick={() => setModalShow(false)} className='btn btn-dark w-50'>Cancel</div>
-          <div onClick={() => { deleteItemHandler() }} className='delete btn btn-danger w-50'>Delete</div>
+          <div onClick={() => setModalShow(false)}
+            className='btn btn-dark w-50'>
+            Cancel
+          </div>
+          <div onClick={() => { deleteItemHandler() }}
+            className='delete btn btn-danger w-50'>
+            Delete
+          </div>
         </div>
       </div>
     </div>}
@@ -75,7 +81,8 @@ export default function ItemDetails() {
         </div>
         <div className="col-md-4">
           <div className="image">
-            <img src={`https://graduation-project-23.s3.amazonaws.com/${item.cover}`} alt="Item Cover" />
+            <img src={`https://graduation-project-23.s3.amazonaws.com/${item.cover}`}
+              alt="Item Cover" />
           </div>
         </div>
         <div className="col-md-8">
@@ -83,8 +90,14 @@ export default function ItemDetails() {
             <div className="row">
               <div className="col-md-12">
                 <div className="actions">
-                  <button onClick={() => { navigate(`/items/${params.id}/edit`) }} className='edit btn btn-warning'>Edit</button>
-                  <button onClick={() => { setModalShow(true) }} className='delete btn btn-danger'>Delete</button>
+                  <button onClick={() => { navigate(`/items/${params.id}/edit`) }}
+                    className='edit btn btn-warning'>
+                    Edit
+                  </button>
+                  <button onClick={() => { setModalShow(true) }}
+                    className='delete btn btn-danger'>
+                    Delete
+                  </button>
                 </div>
               </div>
             </div>
@@ -92,7 +105,10 @@ export default function ItemDetails() {
             <div>
               {item?.description?.length >= 500 ? (
                 <div className='seeMore'>
-                  {seeMore ? (<p className='Description'>Description: {item.description} <button onClick={() => { setSeeMore(false) }}>See Less</button></p>) : (<p className='Description'>Description: {item.description.slice(0, 500)}- <button onClick={() => { setSeeMore(true) }}>See More</button></p>)}
+                  {seeMore ? (<p className='Description'>Description: {item.description}
+                    <button onClick={() => { setSeeMore(false) }}>See Less</button></p>) :
+                    (<p className='Description'>Description: {item.description.slice(0, 500)}
+                      - <button onClick={() => { setSeeMore(true) }}>See More</button></p>)}
                 </div>
               ) : (
                 <p className='Description'>Description: {item.description}</p>
@@ -103,7 +119,10 @@ export default function ItemDetails() {
             <p>Price: {item.price}</p>
             {/* <p>Discount: {item.discountRate}</p> */}
             <p>Gender: {item.gender}</p>
-            <p>Rate: {item.averageRate}</p>
+            <p>Rate: {item.averageRate &&
+              (((item.averageRate).toString()).length === 1 ?
+                ((item.averageRate).toString()).slice(0, 1) :
+                ((item.averageRate).toString()).slice(0, 3))}</p>
             <p>Available Sizes: {item.sizes + ", "}</p>
             <p>Available Colors: {item.colors + ", "}</p>
             <p>Available Categories: {

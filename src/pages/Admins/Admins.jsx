@@ -79,7 +79,8 @@ export default function Admins() {
                   (
                     admins.map((admin, index) => {
                       return (
-                        <tr key={admin._id} onClick={() => navigate(`/admins/${admin._id}`)}>
+                        <tr key={admin._id}
+                          onClick={() => navigate(`/admins/${admin._id}`)}>
                           <td>{index + 1}</td>
                           <td>{admin.name}</td>
                           <td>{admin.email}</td>

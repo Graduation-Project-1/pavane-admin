@@ -14,6 +14,7 @@ export default function EditBrand() {
   const [errorList, setErrorList] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [uploadImage, setUploadImage] = useState(null);
+  const [uploadCover, setUploadCover] = useState(null);
   const [categories, setCategories] = useState([])
 
   const [oldBrand, setOldBrand] = useState({
@@ -61,6 +62,7 @@ export default function EditBrand() {
           categoryList: data?.Data?.categoryList.map((cat) => { return cat._id })
         })
         setUploadImage(data?.Data?.image)
+        setUploadCover(data?.Data?.coverImage)
 
       }
     } catch (e) {
@@ -125,7 +127,8 @@ export default function EditBrand() {
           formData.append("images", uploadImage);
           setLoading(true);
           try {
-            const { data } = typeof uploadImage === "object" && await brandServices.uploadImageBrand(params.id, formData)
+            const { data } = typeof uploadImage === "object" &&
+              await brandServices.uploadImageBrand(params.id, formData)
             if (data.success && data.status === 200) {
               setLoading(false);
             }
@@ -133,6 +136,18 @@ export default function EditBrand() {
             setLoading(false);
             setErrorMessage(error);
           }
+          // var formDataCover = new FormData();
+          // formDataCover.append("images", uploadCover);
+          // setLoading(true);
+          // try {
+          //   const { data } = typeof uploadCover === "object" && await brandServices.uploadCoverImageBrand(params.id, formDataCover)
+          //   if (data.success && data.status === 200) {
+          //     setLoading(false);
+          //   }
+          // } catch (error) {
+          //   setLoading(false);
+          //   setErrorMessage(error);
+          // }
           navigate(`/brands/${params.id}`);
         }
       } catch (error) {
@@ -143,8 +158,14 @@ export default function EditBrand() {
   };
 
   const ref = useRef();
+  const coverRef = useRef();
+
   const imageUploader = (e) => {
     ref.current.click();
+  };
+
+  const coverUploader = (e) => {
+    coverRef.current.click();
   };
 
   async function getAllCategoriesHandler() {
@@ -205,7 +226,9 @@ export default function EditBrand() {
             <div className="main-image-label">
               {uploadImage && (
                 <img
-                  src={typeof uploadImage === "object" ? URL.createObjectURL(uploadImage) : (`https://graduation-project-23.s3.amazonaws.com/${uploadImage}`)}
+                  src={typeof uploadImage === "object" ?
+                    URL.createObjectURL(uploadImage) :
+                    (`https://graduation-project-23.s3.amazonaws.com/${uploadImage}`)}
                   alt="imag-viewer"
                   className="uploaded-img"
                   onClick={() => {
@@ -232,6 +255,38 @@ export default function EditBrand() {
                 Add Image
               </label>
             </div>
+
+            {/* <div className="main-image-label">
+              {uploadCover && (
+                <img
+                  src={typeof uploadCover === "object" ? URL.createObjectURL(uploadCover) : (`https://graduation-project-23.s3.amazonaws.com/${uploadCover}`)}
+                  alt="imag-viewer"
+                  className="uploaded-img"
+                  onClick={() => {
+                    window.open(
+                      uploadCover ? URL.createObjectURL(uploadCover) : null
+                    );
+                  }}
+                />
+              )}
+              <input
+                className="main-input-image"
+                type="file"
+                name="upload-img"
+                ref={coverRef}
+                onChange={(e) => {
+                  setUploadCover(e.target.files[0]);
+                }}
+              />
+              <label
+                className="main-label-image"
+                onClick={coverUploader}
+                htmlFor="upload-img"
+              >
+                Add Cover
+              </label>
+            </div> */}
+
             <form onSubmit={editBrandHandler}>
               <label htmlFor="name">Name</label>
               <input
@@ -265,7 +320,11 @@ export default function EditBrand() {
                 categories.map((category, index) => {
                   return (
                     <div className="check" key={category._id}>
-                      <input checked={isSelectedCategory(category._id)} type="checkbox" id={category.name} onChange={(e) => { toggleSelectedCategoriesHandler(category._id) }} />
+                      <input
+                        checked={isSelectedCategory(category._id)}
+                        type="checkbox"
+                        id={category.name}
+                        onChange={(e) => { toggleSelectedCategoriesHandler(category._id) }} />
                       <label htmlFor={category.name}>{category.name}</label>
                     </div>
                   )

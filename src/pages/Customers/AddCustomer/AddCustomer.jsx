@@ -250,7 +250,11 @@ export default function AddCustomer() {
                 />
               </div>
               <label>City</label>
-              <select onChange={(e) => { setLocation(e.target.value) }} className='form-control add-customer-input' id="location" name="location" title='location'>
+              <select onChange={(e) => { setLocation(e.target.value) }}
+                className='form-control add-customer-input'
+                id="location"
+                name="location"
+                title='location'>
                 <option defaultValue='City'>-- City --</option>
                 <option value="Cairo">Cairo</option>
                 <option value="Alexandria">Alexandria</option>

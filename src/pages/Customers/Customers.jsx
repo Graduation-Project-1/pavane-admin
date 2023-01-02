@@ -79,7 +79,8 @@ export default function Customers() {
                   (
                     customers.map((customer, index) => {
                       return (
-                        <tr key={customer._id} onClick={() => navigate(`/customers/${customer._id}`)}>
+                        <tr key={customer._id}
+                          onClick={() => navigate(`/customers/${customer._id}`)}>
                           <td>{index + 1}</td>
                           <td>{customer.name}</td>
                           <td>{customer.email}</td>

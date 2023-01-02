@@ -62,7 +62,9 @@ export default function Advertisements() {
                     {advertisements.map((advertisement, index) => {
                       return (
                         <div className="carousel-item active" key={advertisement._id} onClick={() => navigate(`/advertisements/${advertisement._id}`)}>
-                          <img src={`https://graduation-project-23.s3.amazonaws.com/${advertisement.image}`} className="d-block w-100" alt="..." />
+                          <img src={`https://graduation-project-23.s3.amazonaws.com/${advertisement.image}`}
+                            className="d-block w-100"
+                            alt="..." />
                         </div>
                       )
                     })}
