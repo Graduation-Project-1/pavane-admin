@@ -26,6 +26,16 @@ let brandServices = {
     return response
   },
 
+  brandSearch: async (search, page = 1, size = 10) => {
+    const response = await Axios.get(`brandSearch?${search.length > 0 ? `&search=${search}&page=${page}&size=${size}` : ""}`)
+    return response
+  },
+
+  getMostLikedBrands: async () => {
+    const response = await Axios.get(`getMostLikedBrands`)
+    return response
+  },
+
   editBrand: async (id, obj) => {
     const response = await Axios.put(`updateBrand/${id}`, obj)
     return response
@@ -33,6 +43,16 @@ let brandServices = {
 
   deleteBrand: async (id) => {
     const response = await Axios.delete(`deleteBrand/${id}`)
+    return response
+  },
+
+  addToArchive: async (id) => {
+    const response = await Axios.put(`archiveBrand/${id}`)
+    return response
+  },
+
+  removeFromArchive: async (id) => {
+    const response = await Axios.put(`disArchiveBrand/${id}`)
     return response
   },
 }

@@ -30,6 +30,16 @@ let customerServices = {
     const response = await Axios.get(`getAllCustomers?page=${page}&size=${size}`)
     return response
   },
+
+  addToArchive: async (id) => {
+    const response = await Axios.put(`archiveCustomer/${id}`)
+    return response
+  },
+
+  removeFromArchive: async (id) => {
+    const response = await Axios.put(`disArchiveCustomer/${id}`)
+    return response
+  },
 }
 
 export default customerServices;

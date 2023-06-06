@@ -57,6 +57,30 @@
   }
 }
 
+.back {
+  background-color: var(--mainColor);
+  padding: 5px 10px;
+  margin: 10px;
+  border: 1px solid var(--mainColor);
+  border-radius: 3px;
+  transition: all 0.5s;
+
+  &:hover {
+    background-color: var(--secondaryColor);
+    border: 1px solid var(--mainColor);
+  }
+
+  &:hover i {
+    color: var(--mainColor);
+    font-size: 18px;
+  }
+
+  i {
+    color: #fff;
+    font-size: 18px;
+  }
+}
+
 .overlay-modal {
   background-color: rgba(0, 0, 0, 0.4);
   position: fixed;
@@ -67,6 +91,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 100;
 
   .overlay-box {
     background-color: rgb(255, 255, 255);
@@ -84,4 +109,153 @@
       }
     }
   }
+}
+.image {
+  margin: 20px;
+  height: 250px;
+
+  img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+}
+
+.advertisement-data {
+  display: flex;
+  justify-content: center;
+  height: 350px;
+
+  .carousel {
+    width: 100%;
+    cursor: pointer;
+
+    .carousel-inner {
+      height: 300px;
+      width: 100%;
+      background-color: #fff;
+      padding: 0;
+      margin: 0;
+      border-radius: 5px;
+
+      .carousel-item {
+        height: 300px;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+
+        img {
+          width: fit-content;
+          height: 300px;
+          object-fit: contain;
+          padding: 0;
+          margin: 0;
+        }
+      }
+      .active {
+        background-color: transparent;
+      }
+    }
+    .carousel-control-prev {
+      position: absolute;
+      top: 35%;
+      left: -10px;
+      background-color: #ffc107;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+
+      .carousel-control-prev-icon {
+        background-size: 20px;
+      }
+    }
+    .carousel-control-next {
+      position: absolute;
+      top: 35%;
+      right: -30px;
+      background-color: #ffc107;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+
+      .carousel-control-next-icon {
+        background-size: 20px;
+      }
+    }
+  }
+
+  .my-table {
+    text-align: center;
+    margin: 20px;
+    cursor: pointer;
+  }
+}
+
+span {
+  font-weight: bold;
+}
+
+.cover-image {
+  width: 100%;
+  height: 250px;
+  background-color: #bebebe;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.review {
+  margin: 10px 0;
+  width: 100%;
+  min-height: 75px;
+  border-top: 1px solid #ccc;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  .image {
+    width: 10%;
+    height: 100%;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      border-radius: 50%;
+    }
+  }
+
+  .review-data {
+    width: 70%;
+    padding: 10px;
+    margin-top: 10px;
+
+    .comment {
+      font-size: 18px;
+      color: #242424;
+      margin-bottom: 0;
+    }
+
+    .reviewer {
+      font-size: 14px;
+      color: #606060;
+      cursor: pointer;
+    }
+  }
+
+  .rating {
+    width: 20%;
+  }
+}
+
+.rate-color {
+  color: #ffc107;
 }

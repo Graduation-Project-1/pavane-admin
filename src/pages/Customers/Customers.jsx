@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import OverlayLoading from '../../components/OverlayLoading/OverlayLoading'
 import customerServices from '../../services/customerServices'
 import Pagination from "react-js-pagination";
@@ -8,37 +8,39 @@ import './Customers.scss'
 export default function Customers() {
 
   const navigate = useNavigate()
+  const params = useParams()
 
   const [loading, setLoading] = useState(false)
   const [customers, setCustomers] = useState([])
   const [errorMessage, setErrorMessage] = useState("");
-  const [currentPage, setCurrentPage] = useState(1)
+  const [currentPage, setCurrentPage] = useState(params?.pageNumber ? parseInt(params?.pageNumber) : 1)
   const [postPerPage, setPostPerPage] = useState(10)
   const [totalResult, setTotalResult] = useState(0)
 
   function handlePageChange(pageNumber) {
+    navigate(`/customers/page/${pageNumber}`)
     setCurrentPage(pageNumber)
   }
 
-  async function getAllCustomersHandler(currentPage) {
+  async function getAllCustomersHandler() {
     setLoading(true)
     try {
-      const { data } = await customerServices.getAllCustomers(currentPage);
+      const { data } = await customerServices.getAllCustomers(params?.pageNumber);
       setLoading(true)
-      if (data.success && data.status === 200) {
+      if (data?.success && data?.status === 200) {
         setLoading(false);
-        setCustomers(data.Data)
-        setTotalResult(data.totalResult)
+        setCustomers(data?.Data)
+        setTotalResult(data?.totalResult)
       }
     } catch (e) {
       setLoading(false);
-      setErrorMessage(e.response.data.message);
+      setErrorMessage(e?.response?.data?.message);
     }
   }
 
   useEffect(() => {
-    getAllCustomersHandler(currentPage)
-  }, [currentPage])
+    getAllCustomersHandler(params?.pageNumber)
+  }, [params?.pageNumber])
 
   return <>
     <div className="customers">
@@ -79,13 +81,13 @@ export default function Customers() {
                   (
                     customers.map((customer, index) => {
                       return (
-                        <tr key={customer._id}
-                          onClick={() => navigate(`/customers/${customer._id}`)}>
+                        <tr key={customer?._id}
+                          onClick={() => navigate(`/customers/page/${params?.pageNumber ? params?.pageNumber : 1}/${customer?._id}`)}>
                           <td>{index + 1}</td>
-                          <td>{customer.name}</td>
-                          <td>{customer.email}</td>
-                          <td>{customer.phone}</td>
-                          <td>{customer.gender}</td>
+                          <td>{customer?.name}</td>
+                          <td>{customer?.email}</td>
+                          <td>{customer?.phone}</td>
+                          <td>{customer?.gender}</td>
                         </tr>
                       )
                     })

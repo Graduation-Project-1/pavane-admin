@@ -2,6 +2,8 @@ import Joi from 'joi'
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import customerServices from '../../../../services/customerServices'
+import toastPopup from '../../../../helpers/toastPopup'
+import imageEndPoint from '../../../../services/imagesEndPoint'
 import './EditCustomer.scss'
 
 export default function EditCustomer() {
@@ -46,9 +48,9 @@ export default function EditCustomer() {
   async function getCustomerByIdHandler() {
     setLoading(true)
     try {
-      const { data } = await customerServices.getCustomerById(params.id);
+      const { data } = await customerServices.getCustomerById(params?.id);
       setLoading(true)
-      if (data.success && data.status === 200) {
+      if (data?.success && data?.status === 200) {
         setLoading(false);
         setOldCustomer({
           name: data?.Data?.name,
@@ -70,7 +72,7 @@ export default function EditCustomer() {
       }
     } catch (e) {
       setLoading(false);
-      setErrorMessage(e.response.data.message);
+      setErrorMessage(e?.response?.data?.message);
     }
   }
 
@@ -116,14 +118,14 @@ export default function EditCustomer() {
         }
       })
       try {
-        const { data } = await customerServices.editCustomer(params.id, editedData)
-        if (data.success && data.status === 200) {
+        const { data } = await customerServices.editCustomer(params?.id, editedData)
+        if (data?.success && data?.status === 200) {
           setLoading(false);
           var formData = new FormData();
           formData.append("images", uploadImage);
           setLoading(true);
           try {
-            const { data } = typeof uploadImage === "object" && await customerServices.uploadImageCustomer(params.id, formData)
+            const { data } = typeof uploadImage === "object" && await customerServices.uploadImageCustomer(params?.id, formData)
             if (data.success && data.code === 200) {
               setLoading(false);
             }
@@ -131,11 +133,12 @@ export default function EditCustomer() {
             setLoading(false);
             setErrorMessage(error);
           }
-          navigate(`/customers/${params.id}`);
+          navigate(`/customers/page/${params?.pageNumber}/${params?.id}`);
+          toastPopup.success("Customer updated successfully")
         }
       } catch (error) {
         setLoading(false);
-        setErrorMessage(error.response.data.message);
+        setErrorMessage(error?.response?.data?.message);
       }
     }
   };
@@ -149,9 +152,14 @@ export default function EditCustomer() {
     getCustomerByIdHandler()
   }, [])
 
-  let date = (newCustomer.dateOfBirth).split('T')[0]
+  let date = (newCustomer?.dateOfBirth)?.split('T')[0]
 
   return <>
+    <div>
+      <button className='back-edit' onClick={() => { navigate(`/customers/page/${params?.pageNumber}/${params?.id}`) }}>
+        <i className="fa-solid fa-arrow-left"></i>
+      </button>
+    </div>
     <div className="row">
       <div className="col-md-12">
         <div className="edit-customer-page">
@@ -175,7 +183,7 @@ export default function EditCustomer() {
             <div className="main-image-label">
               {uploadImage && (
                 <img
-                  src={typeof uploadImage === "object" ? URL.createObjectURL(uploadImage) : (`https://graduation-project-23.s3.amazonaws.com/${uploadImage}`)}
+                  src={typeof uploadImage === "object" ? URL.createObjectURL(uploadImage) : (`${imageEndPoint}${uploadImage}`)}
                   alt="imag-viewer"
                   className="uploaded-img"
                   onClick={() => {
@@ -210,7 +218,7 @@ export default function EditCustomer() {
                 type="text"
                 name="name"
                 id="name"
-                value={newCustomer.name}
+                value={newCustomer?.name}
               />
               <label htmlFor="email">Email</label>
               <input
@@ -219,7 +227,7 @@ export default function EditCustomer() {
                 type="email"
                 name="email"
                 id="email"
-                value={newCustomer.email}
+                value={newCustomer?.email}
               />
               <label htmlFor="phone">phone</label>
               <input
@@ -228,7 +236,7 @@ export default function EditCustomer() {
                 type="number"
                 name="phone"
                 id="phone"
-                value={newCustomer.phone}
+                value={newCustomer?.phone}
               />
               <label htmlFor="">Gender</label>
               <div className="wrapper add-customer-input">
@@ -238,7 +246,7 @@ export default function EditCustomer() {
                   type="radio"
                   name="gender"
                   id="male"
-                  checked={newCustomer.gender === 'male'}
+                  checked={newCustomer?.gender === 'male'}
                 />
                 <input
                   onChange={getNewCustomerData}
@@ -246,7 +254,7 @@ export default function EditCustomer() {
                   type="radio"
                   name="gender"
                   id="female"
-                  checked={newCustomer.gender === 'female'}
+                  checked={newCustomer?.gender === 'female'}
                 />
                 <label htmlFor="male" className="option male">
                   <div className="dot"></div>
@@ -269,7 +277,14 @@ export default function EditCustomer() {
                 />
               </div>
               <label>City</label>
-              <select onChange={getNewCustomerData} selected={newCustomer.location} value={newCustomer.location} className='form-control add-customer-input' id="location" name="location" title='location'>
+              <select
+                onChange={getNewCustomerData}
+                selected={newCustomer?.location}
+                value={newCustomer?.location}
+                className='form-control add-customer-input'
+                id="location"
+                name="location"
+                title='location'>
                 <option value={0} disabled>-- City --</option>
                 <option value="Cairo">Cairo</option>
                 <option value="Alexandria">Alexandria</option>

@@ -1,0 +1,17 @@
+.nav-tabs {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 20px 20px 0px 20px;
+
+  .nav-item {
+    width: 25%;
+    .nav-link {
+      color: #242424;
+    }
+    .nav-link.active {
+      background-color: #ffa300;
+      color: #fff;
+    }
+  }
+}

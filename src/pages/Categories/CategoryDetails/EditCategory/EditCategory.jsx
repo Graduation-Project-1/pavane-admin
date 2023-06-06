@@ -2,6 +2,8 @@ import Joi from 'joi'
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import categoryServices from '../../../../services/categoryServices'
+import toastPopup from '../../../../helpers/toastPopup'
+import imageEndPoint from '../../../../services/imagesEndPoint'
 import './EditCategory.scss'
 
 export default function EditCategory() {
@@ -38,7 +40,7 @@ export default function EditCategory() {
     try {
       const { data } = await categoryServices.getCategoryById(params.id);
       setLoading(true)
-      if (data.success && data.status === 200) {
+      if (data?.success && data?.status === 200) {
         setLoading(false);
         setOldCategory({
           name: data?.Data?.name
@@ -50,7 +52,7 @@ export default function EditCategory() {
       }
     } catch (e) {
       setLoading(false);
-      setErrorMessage(e.response.data.message);
+      setErrorMessage(e?.response?.data?.message);
     }
   }
 
@@ -76,9 +78,9 @@ export default function EditCategory() {
     setErrorList([]);
     let validationResult = editCategoryValidation(newCategory);
     setLoading(true);
-    if (validationResult.error) {
+    if (validationResult?.error) {
       setLoading(false);
-      setErrorList(validationResult.error.details);
+      setErrorList(validationResult?.error?.details);
     } else {
       setLoading(true);
       let editedData = {};
@@ -90,26 +92,31 @@ export default function EditCategory() {
         }
       })
       try {
-        const { data } = await categoryServices.editCategory(params.id, editedData)
-        if (data.success && data.status === 200) {
+        const { data } = await categoryServices.editCategory(params?.id, editedData)
+        if (data?.success && data?.status === 200) {
           setLoading(false);
           var formData = new FormData();
           formData.append("images", uploadImage);
           setLoading(true);
           try {
-            const { data } = await categoryServices.uploadImageCategory(params.id, formData)
-            if (data.success && data.code === 200) {
+            const { data } = await categoryServices.uploadImageCategory(params?.id, formData)
+            if (data?.success && data?.code === 200) {
               setLoading(false);
             }
           } catch (error) {
             setLoading(false);
             setErrorMessage(error);
           }
-          navigate(`/categories/${params.id}`);
+          if (params?.pageNumber) {
+            navigate(`/categories/page/${params?.pageNumber}/${params?.id}`)
+          } else {
+            navigate(`/categories/${params?.id}`)
+          }
+          toastPopup.success("Category updated successfully")
         }
       } catch (error) {
         setLoading(false);
-        setErrorMessage(error.response.data.message);
+        setErrorMessage(error?.response?.data?.message);
       }
     }
   };
@@ -124,6 +131,15 @@ export default function EditCategory() {
   }, [])
 
   return <>
+    <div>
+      <button className='back-edit' onClick={() => {
+        params?.pageNumber ?
+          navigate(`/categories/page/${params?.pageNumber}/${params?.id}`)
+          : navigate(`/categories/${params?.id}`)
+      }}>
+        <i className="fa-solid fa-arrow-left"></i>
+      </button>
+    </div>
     <div className="row">
       <div className="col-md-12">
         <div className="edit-category-page">
@@ -149,7 +165,7 @@ export default function EditCategory() {
                 <img
                   src={typeof uploadImage === "object" ?
                     URL.createObjectURL(uploadImage) :
-                    (`https://graduation-project-23.s3.amazonaws.com/${uploadImage}`)}
+                    (`${imageEndPoint}${uploadImage}`)}
                   alt="imag-viewer"
                   className="uploaded-img"
                   onClick={() => {
@@ -184,7 +200,7 @@ export default function EditCategory() {
                 type="text"
                 name="name"
                 id="name"
-                value={newCategory.name}
+                value={newCategory?.name}
               />
               <button className='add-category-button'>
                 {loading ?

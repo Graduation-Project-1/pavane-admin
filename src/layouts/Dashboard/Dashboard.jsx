@@ -51,13 +51,19 @@ export default function Dashboard() {
           <Route path='/admins/addAdmin' element={<AddAdmin />} />
 
           <Route path='/brands' element={<Brands />} />
+          <Route path='/brands/page/:pageNumber' element={<Brands />} />
           <Route path='/brands/:id' element={<BrandDetails />} />
+          <Route path='/brands/page/:pageNumber/:id' element={<BrandDetails />} />
           <Route path='/brands/:id/edit' element={<EditBrand />} />
+          <Route path='/brands/page/:pageNumber/:id/edit' element={<EditBrand />} />
           <Route path='/brands/addBrand' element={<AddBrand />} />
 
           <Route path='/items' element={<Items />} />
+          <Route path='/items/page/:pageNumber' element={<Items />} />
           <Route path='/items/:id' element={<ItemDetails />} />
+          <Route path='/items/page/:pageNumber/:id' element={<ItemDetails />} />
           <Route path='/items/:id/edit' element={<EditItem />} />
+          <Route path='/items/page/:pageNumber/:id/edit' element={<EditItem />} />
           <Route path='/items/addItem' element={<AddItem />} />
 
           <Route path='/collections' element={<Collections />} />
@@ -66,7 +72,10 @@ export default function Dashboard() {
           <Route path='/collections/addCollection' element={<AddCollection />} />
 
           <Route path='/categories' element={<Categories />} />
+          <Route path='/categories/page/:pageNumber' element={<Categories />} />
           <Route path='/categories/:id' element={<CategoryDetails />} />
+          <Route path='/categories/page/:pageNumber/:id' element={<CategoryDetails />} />
+          <Route path='/categories/page/:pageNumber/:id/edit' element={<EditCategory />} />
           <Route path='/categories/:id/edit' element={<EditCategory />} />
           <Route path='/categories/addCategory' element={<AddCategory />} />
 
@@ -76,8 +85,10 @@ export default function Dashboard() {
           <Route path='/advertisements/addAdvertisement' element={<AddAdvertisement />} />
 
           <Route path='/customers' element={<Customers />} />
+          <Route path='/customers/page/:pageNumber' element={<Customers />} />
           <Route path='/customers/:id' element={<CustomerDetails />} />
-          <Route path='/customers/:id/edit' element={<EditCustomer />} />
+          <Route path='/customers/page/:pageNumber/:id' element={<CustomerDetails />} />
+          <Route path='/customers/page/:pageNumber/:id/edit' element={<EditCustomer />} />
           <Route path='/customers/addCustomer' element={<AddCustomer />} />
 
           <Route path='/*' element={<Navigate replace to='/admins' />} />

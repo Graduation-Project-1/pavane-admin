@@ -89,3 +89,28 @@
     }
   }
 }
+
+.back-edit {
+  background-color: var(--mainColor);
+  padding: 5px 10px;
+  margin: 10px;
+  border: 1px solid var(--mainColor);
+  border-radius: 3px;
+  transition: all 0.5s;
+  position: absolute;
+
+  &:hover {
+    background-color: var(--secondaryColor);
+    border: 1px solid var(--mainColor);
+  }
+
+  &:hover i {
+    color: var(--mainColor);
+    font-size: 18px;
+  }
+
+  i {
+    color: #fff;
+    font-size: 18px;
+  }
+}

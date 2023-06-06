@@ -38,3 +38,35 @@
     }
   }
 }
+
+.filter-items {
+  margin: 10px 20px;
+  display: flex;
+  flex-direction: row;
+  height: 25px;
+
+  input {
+    display: none;
+    &:checked ~ label {
+      background-color: #ffa300;
+      color: white;
+    }
+  }
+
+  .items {
+    display: flex;
+    flex-direction: row;
+    label {
+      padding: 5px 10px;
+      background-color: #e3e3e3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 5px;
+      border-radius: 5px;
+      color: #000;
+      font-size: 15px;
+      cursor: pointer;
+    }
+  }
+}

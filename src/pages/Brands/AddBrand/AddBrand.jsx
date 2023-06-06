@@ -5,6 +5,8 @@ import brandServices from '../../../services/brandServices';
 import categoryServices from '../../../services/categoryServices';
 import { ReactComponent as EyeOPen } from "../../../assets/eye_open.svg";
 import { ReactComponent as EyeClose } from "../../../assets/eye_close.svg";
+import Multiselect from 'multiselect-react-dropdown';
+import toastPopup from '../../../helpers/toastPopup';
 import './AddBrand.scss'
 
 export default function AddBrand() {
@@ -75,30 +77,30 @@ export default function AddBrand() {
     setErrorList([]);
     let validationResult = addBrandValidation(newBrand);
     setLoading(true);
-    if (validationResult.error) {
+    if (validationResult?.error) {
       setLoading(false);
-      setErrorList(validationResult.error.details);
+      setErrorList(validationResult?.error?.details);
     } else {
       setLoading(true);
       try {
         let brandData = {
-          name: newBrand.name,
-          email: newBrand.email,
-          password: newBrand.password,
-          phone: [newBrand.phone],
+          name: newBrand?.name,
+          email: newBrand?.email,
+          password: newBrand?.password,
+          phone: [newBrand?.phone],
           categoryList: getFinalCategories()
         }
         const { data } = await brandServices.addBrand(brandData)
-        if (data.success && data.message === "BrandAdded") {
+        if (data?.success && data?.message === "BrandAdded") {
           setLoading(false);
-          let brandID = data.Data._id
+          let brandID = data?.Data?._id
           var formData = new FormData();
           formData.append("images", uploadImage);
           setLoading(true)
           try {
             const { data } = await brandServices.uploadImageBrand(brandID, formData)
             setLoading(true)
-            if (data.success && data.status === 200) {
+            if (data?.success && data?.status === 200) {
               setLoading(false);
             }
           } catch (error) {
@@ -111,7 +113,7 @@ export default function AddBrand() {
           try {
             const { data } = await brandServices.uploadCoverImageBrand(brandID, formDataCover)
             setLoading(true)
-            if (data.success && data.status === 200) {
+            if (data?.success && data?.status === 200) {
               setLoading(false);
             }
           } catch (error) {
@@ -119,10 +121,11 @@ export default function AddBrand() {
             setErrorMessage(error);
           }
           navigate("/brands");
+          toastPopup.success("Brand added successfully")
         }
       } catch (error) {
         setLoading(false);
-        setErrorMessage(error.response.data.message);
+        setErrorMessage(error?.response?.data?.message);
       }
     }
   };
@@ -130,15 +133,15 @@ export default function AddBrand() {
   async function getAllCategoriesHandler() {
     setLoading(true)
     try {
-      const { data } = await categoryServices.getAllCategories();
+      const { data } = await categoryServices.getAllCategories(1, 5000);
       setLoading(true)
-      if (data.success && data.status === 200) {
+      if (data?.success && data?.status === 200) {
         setLoading(false);
-        setCategories(data.Data)
+        setCategories(data?.Data)
       }
     } catch (e) {
       setLoading(false);
-      setErrorMessage(e.response.data.message);
+      setErrorMessage(e?.response?.data?.message);
     }
   }
 
@@ -155,19 +158,31 @@ export default function AddBrand() {
   function getFinalCategories() {
     let finalBrandCategories = []
     selectedCategories.forEach((selectedCategory) => {
-      categories.filter(category => category._id === selectedCategory).map((category) => {
-        finalBrandCategories.push(category._id)
+      categories.filter(category => category?._id === selectedCategory).map((category) => {
+        finalBrandCategories.push(category?._id)
       })
     })
 
     return finalBrandCategories
   }
 
+  let categoriesOptions = categories.map((category) => {
+    return ({
+      name: category?.name,
+      id: category?._id
+    })
+  })
+
   useEffect(() => {
     getAllCategoriesHandler()
   }, [])
 
   return <>
+    <div>
+      <button className='back-edit' onClick={() => { navigate(`/brands`) }}>
+        <i className="fa-solid fa-arrow-left"></i>
+      </button>
+    </div>
     <div className="row">
       <div className="col-md-12">
         <div className="add-brand-page">
@@ -188,6 +203,38 @@ export default function AddBrand() {
                 )
               })
             }
+
+            <div className="main-cover-label">
+              {uploadCover && (
+                <img
+                  src={uploadCover ? URL.createObjectURL(uploadCover) : null}
+                  alt="imag-viewer"
+                  className="uploaded-img"
+                  onClick={() => {
+                    window.open(
+                      uploadCover ? URL.createObjectURL(uploadCover) : null
+                    );
+                  }}
+                />
+              )}
+              <input
+                className="main-input-image"
+                type="file"
+                name="upload-img"
+                ref={coverRef}
+                onChange={(e) => {
+                  setUploadCover(e.target.files[0]);
+                }}
+              />
+              <label
+                className="main-label-image"
+                onClick={coverUploader}
+                htmlFor="upload-img"
+              >
+                Add Cover
+              </label>
+            </div>
+
             <div className="main-image-label">
               {uploadImage && (
                 <img
@@ -216,37 +263,6 @@ export default function AddBrand() {
                 htmlFor="upload-img"
               >
                 Add Image
-              </label>
-            </div>
-
-            <div className="main-image-label">
-              {uploadCover && (
-                <img
-                  src={uploadCover ? URL.createObjectURL(uploadCover) : null}
-                  alt="imag-viewer"
-                  className="uploaded-img"
-                  onClick={() => {
-                    window.open(
-                      uploadCover ? URL.createObjectURL(uploadCover) : null
-                    );
-                  }}
-                />
-              )}
-              <input
-                className="main-input-image"
-                type="file"
-                name="upload-img"
-                ref={coverRef}
-                onChange={(e) => {
-                  setUploadCover(e.target.files[0]);
-                }}
-              />
-              <label
-                className="main-label-image"
-                onClick={coverUploader}
-                htmlFor="upload-img"
-              >
-                Add Cover
               </label>
             </div>
 
@@ -303,16 +319,19 @@ export default function AddBrand() {
                 id="phone"
               />
               <p className='select-categories'>Select Categories</p>
-              {
-                categories.map((category) => {
-                  return (
-                    <div className="check" key={category._id}>
-                      <input type="checkbox" id={category.name} onChange={(e) => { toggleSelectedCategoriesHandler(category._id) }} />
-                      <label htmlFor={category.name}>{category.name}</label>
-                    </div>
-                  )
-                })
-              }
+              <Multiselect
+                displayValue="name"
+                onKeyPressFn={function noRefCheck() { }}
+                onRemove={function noRefCheck(selectedList, selectedItem) {
+                  toggleSelectedCategoriesHandler(selectedItem.id)
+                }}
+                onSearch={function noRefCheck() { }}
+                onSelect={function noRefCheck(selectedList, selectedItem) {
+                  toggleSelectedCategoriesHandler(selectedItem.id)
+                }}
+                options={categoriesOptions}
+                showCheckbox
+              />
               <button className='add-brand-button'>
                 {loading ?
                   (<i className="fas fa-spinner fa-spin "></i>)

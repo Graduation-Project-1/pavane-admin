@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import customerServices from '../../../services/customerServices';
 import { ReactComponent as EyeOPen } from "../../../assets/eye_open.svg";
 import { ReactComponent as EyeClose } from "../../../assets/eye_close.svg";
+import toastPopup from '../../../helpers/toastPopup';
 import './AddCustomer.scss'
 
 export default function AddCustomer() {
@@ -84,32 +85,36 @@ export default function AddCustomer() {
           location: location,
         }
         const { data } = await customerServices.addCustomer(customerData)
-        if (data.success && data.message === "customerAdded") {
-          setLoading(false);
-          let customerID = data.Data._id
-          var formData = new FormData();
-          formData.append("images", uploadImage);
+        setLoading(false);
+        let customerID = data?.Data?._id
+        var formData = new FormData();
+        formData.append("images", uploadImage);
+        setLoading(true)
+        try {
+          const { data } = await customerServices.uploadImageCustomer(customerID, formData)
           setLoading(true)
-          try {
-            const { data } = await customerServices.uploadImageCustomer(customerID, formData)
-            setLoading(true)
-            if (data.success && data.status === 200) {
-              setLoading(false);
-            }
-          } catch (error) {
+          if (data?.success && data?.status === 200) {
             setLoading(false);
-            setErrorMessage(error);
           }
-          navigate("/customers");
+        } catch (error) {
+          setLoading(false);
+          setErrorMessage(error);
         }
+        navigate("/customers");
+        toastPopup.success("Customer added successfully")
       } catch (error) {
         setLoading(false);
-        setErrorMessage(error.response.data.message);
+        setErrorMessage(error?.response?.data?.message);
       }
     }
   };
 
   return <>
+    <div>
+      <button className='back-edit' onClick={() => { navigate(`/customers`) }}>
+        <i className="fa-solid fa-arrow-left"></i>
+      </button>
+    </div>
     <div className="row">
       <div className="col-md-12">
         <div className="add-customer-page">
@@ -125,7 +130,7 @@ export default function AddCustomer() {
               errorList.map((err, index) => {
                 return (
                   <div key={index} className="alert alert-danger myalert">
-                    {err.message}
+                    {err?.message}
                   </div>
                 )
               })

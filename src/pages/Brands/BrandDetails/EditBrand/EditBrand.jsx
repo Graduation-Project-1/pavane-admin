@@ -3,6 +3,9 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import brandServices from '../../../../services/brandServices'
 import categoryServices from '../../../../services/categoryServices'
+import imageEndPoint from '../../../../services/imagesEndPoint'
+import toastPopup from '../../../../helpers/toastPopup'
+import Multiselect from 'multiselect-react-dropdown'
 import './EditBrand.scss'
 
 export default function EditBrand() {
@@ -16,6 +19,7 @@ export default function EditBrand() {
   const [uploadImage, setUploadImage] = useState(null);
   const [uploadCover, setUploadCover] = useState(null);
   const [categories, setCategories] = useState([])
+  const [selectedCategories, setSelectedCategories] = useState([])
 
   const [oldBrand, setOldBrand] = useState({
     name: "",
@@ -53,21 +57,22 @@ export default function EditBrand() {
           name: data?.Data?.name,
           email: data?.Data?.email,
           phone: data?.Data?.phone,
-          categoryList: data?.Data?.categoryList.map((cat) => { return cat._id })
+          categoryList: data?.Data?.categoryList?.map((cat) => { return cat?._id })
         })
         setNewBrand({
           name: data?.Data?.name,
           email: data?.Data?.email,
           phone: data?.Data?.phone,
-          categoryList: data?.Data?.categoryList.map((cat) => { return cat._id })
+          categoryList: data?.Data?.categoryList?.map((cat) => { return cat?._id })
         })
+        setSelectedCategories(data?.Data?.categoryList)
         setUploadImage(data?.Data?.image)
         setUploadCover(data?.Data?.coverImage)
 
       }
     } catch (e) {
       setLoading(false);
-      setErrorMessage(e.response.data.message);
+      setErrorMessage(e?.response?.data?.message);
     }
   }
 
@@ -98,9 +103,9 @@ export default function EditBrand() {
     setErrorList([]);
     let validationResult = editBrandValidation(newBrand);
     setLoading(true);
-    if (validationResult.error) {
+    if (validationResult?.error) {
       setLoading(false);
-      setErrorList(validationResult.error.details);
+      setErrorList(validationResult?.error?.details);
     } else {
       setLoading(true);
       let editedData = {};
@@ -120,39 +125,44 @@ export default function EditBrand() {
       })
 
       try {
-        const { data } = await brandServices.editBrand(params.id, editedData)
-        if (data.success && data.status === 200) {
+        const { data } = await brandServices.editBrand(params?.id, editedData)
+        if (data?.success && data?.status === 200) {
           setLoading(false);
           var formData = new FormData();
           formData.append("images", uploadImage);
           setLoading(true);
           try {
             const { data } = typeof uploadImage === "object" &&
-              await brandServices.uploadImageBrand(params.id, formData)
-            if (data.success && data.status === 200) {
+              await brandServices.uploadImageBrand(params?.id, formData)
+            if (data?.success && data?.status === 200) {
               setLoading(false);
             }
           } catch (error) {
             setLoading(false);
             setErrorMessage(error);
           }
-          // var formDataCover = new FormData();
-          // formDataCover.append("images", uploadCover);
-          // setLoading(true);
-          // try {
-          //   const { data } = typeof uploadCover === "object" && await brandServices.uploadCoverImageBrand(params.id, formDataCover)
-          //   if (data.success && data.status === 200) {
-          //     setLoading(false);
-          //   }
-          // } catch (error) {
-          //   setLoading(false);
-          //   setErrorMessage(error);
-          // }
-          navigate(`/brands/${params.id}`);
+          var formDataCover = new FormData();
+          formDataCover.append("images", uploadCover);
+          setLoading(true);
+          try {
+            const { data } = typeof uploadCover === "object" && await brandServices.uploadCoverImageBrand(params?.id, formDataCover)
+            if (data?.success && data?.status === 200) {
+              setLoading(false);
+            }
+          } catch (error) {
+            setLoading(false);
+            setErrorMessage(error);
+          }
+          if (params?.pageNumber) {
+            navigate(`/brands/page/${params?.pageNumber}/${params?.id}`)
+          } else {
+            navigate(`/brands/${params?.id}`)
+          }
+          toastPopup.success("Brand updated successfully")
         }
       } catch (error) {
         setLoading(false);
-        setErrorMessage(error.response);
+        setErrorMessage(error?.response);
       }
     }
   };
@@ -171,15 +181,15 @@ export default function EditBrand() {
   async function getAllCategoriesHandler() {
     setLoading(true)
     try {
-      const { data } = await categoryServices.getAllCategories();
+      const { data } = await categoryServices.getAllCategories(1, 5000);
       setLoading(true)
-      if (data.success && data.status === 200) {
+      if (data?.success && data?.status === 200) {
         setLoading(false);
-        setCategories(data.Data)
+        setCategories(data?.Data)
       }
     } catch (e) {
       setLoading(false);
-      setErrorMessage(e.response.data.message);
+      setErrorMessage(e?.response?.data?.message);
     }
   }
 
@@ -197,12 +207,36 @@ export default function EditBrand() {
     }
   }
 
+  let categoriesOptions = categories.map((category) => {
+    return ({
+      name: category?.name,
+      id: category?._id
+    }
+    )
+  })
+
+  let selected_categories = selectedCategories.map((selectedCategory) => {
+    return ({
+      name: selectedCategory?.name,
+      id: selectedCategory?._id
+    })
+  })
+
   useEffect(() => {
     getBrandByIdHandler()
     getAllCategoriesHandler()
   }, [])
 
   return <>
+    <div>
+      <button className='back-edit' onClick={() => {
+        params?.pageNumber ?
+          navigate(`/brands/page/${params?.pageNumber}/${params?.id}`)
+          : navigate(`/brands/${params?.id}`)
+      }}>
+        <i className="fa-solid fa-arrow-left"></i>
+      </button>
+    </div>
     <div className="row">
       <div className="col-md-12">
         <div className="edit-brand-page">
@@ -223,12 +257,45 @@ export default function EditBrand() {
                 )
               })
             }
+
+            <div className="main-cover-label">
+              {uploadCover && (
+                <img
+                  src={typeof uploadCover === "object" ? URL.createObjectURL(uploadCover) :
+                    (`${imageEndPoint}${uploadCover}`)}
+                  alt="imag-viewer"
+                  className="uploaded-img"
+                  onClick={() => {
+                    window.open(
+                      uploadCover ? URL.createObjectURL(uploadCover) : null
+                    );
+                  }}
+                />
+              )}
+              <input
+                className="main-input-image"
+                type="file"
+                name="upload-img"
+                ref={coverRef}
+                onChange={(e) => {
+                  setUploadCover(e.target.files[0]);
+                }}
+              />
+              <label
+                className="main-label-image"
+                onClick={coverUploader}
+                htmlFor="upload-img"
+              >
+                Add Cover
+              </label>
+            </div>
+
             <div className="main-image-label">
               {uploadImage && (
                 <img
                   src={typeof uploadImage === "object" ?
                     URL.createObjectURL(uploadImage) :
-                    (`https://graduation-project-23.s3.amazonaws.com/${uploadImage}`)}
+                    (`${imageEndPoint}${uploadImage}`)}
                   alt="imag-viewer"
                   className="uploaded-img"
                   onClick={() => {
@@ -256,37 +323,6 @@ export default function EditBrand() {
               </label>
             </div>
 
-            {/* <div className="main-image-label">
-              {uploadCover && (
-                <img
-                  src={typeof uploadCover === "object" ? URL.createObjectURL(uploadCover) : (`https://graduation-project-23.s3.amazonaws.com/${uploadCover}`)}
-                  alt="imag-viewer"
-                  className="uploaded-img"
-                  onClick={() => {
-                    window.open(
-                      uploadCover ? URL.createObjectURL(uploadCover) : null
-                    );
-                  }}
-                />
-              )}
-              <input
-                className="main-input-image"
-                type="file"
-                name="upload-img"
-                ref={coverRef}
-                onChange={(e) => {
-                  setUploadCover(e.target.files[0]);
-                }}
-              />
-              <label
-                className="main-label-image"
-                onClick={coverUploader}
-                htmlFor="upload-img"
-              >
-                Add Cover
-              </label>
-            </div> */}
-
             <form onSubmit={editBrandHandler}>
               <label htmlFor="name">Name</label>
               <input
@@ -295,7 +331,7 @@ export default function EditBrand() {
                 type="text"
                 name="name"
                 id="name"
-                value={newBrand.name}
+                value={newBrand?.name}
               />
               <label htmlFor="name">Email</label>
               <input
@@ -304,7 +340,7 @@ export default function EditBrand() {
                 type="email"
                 name="email"
                 id="email"
-                value={newBrand.email}
+                value={newBrand?.email}
               />
               <label htmlFor="name">Phone</label>
               <input
@@ -313,23 +349,23 @@ export default function EditBrand() {
                 type="number"
                 name="phone"
                 id="phone"
-                value={newBrand.phone}
+                value={newBrand?.phone}
               />
               <p className='select-categories'>Select Categories</p>
-              {
-                categories.map((category, index) => {
-                  return (
-                    <div className="check" key={category._id}>
-                      <input
-                        checked={isSelectedCategory(category._id)}
-                        type="checkbox"
-                        id={category.name}
-                        onChange={(e) => { toggleSelectedCategoriesHandler(category._id) }} />
-                      <label htmlFor={category.name}>{category.name}</label>
-                    </div>
-                  )
-                })
-              }
+              <Multiselect
+                displayValue="name"
+                selectedValues={selected_categories}
+                onKeyPressFn={function noRefCheck() { }}
+                onRemove={function noRefCheck(selectedList, selectedItem) {
+                  toggleSelectedCategoriesHandler(selectedItem.id)
+                }}
+                onSearch={function noRefCheck() { }}
+                onSelect={function noRefCheck(selectedList, selectedItem) {
+                  toggleSelectedCategoriesHandler(selectedItem.id)
+                }}
+                options={categoriesOptions}
+                showCheckbox
+              />
               <button className='add-brand-button'>
                 {loading ?
                   (<i className="fas fa-spinner fa-spin "></i>)
