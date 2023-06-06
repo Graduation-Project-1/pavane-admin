@@ -25,7 +25,7 @@ export default function CategoryDetails() {
   const [categoryItems, setCategoryItems] = useState([])
   const [totalCategoryItems, setTotalCategoryItems] = useState(0)
 
-  let PAGE_NUMBER = parseInt(Math.ceil(categoryItems.length / 10) + 1)
+  let PAGE_NUMBER = parseInt(Math.ceil(categoryItems?.length / 10) + 1)
   let LIMIT = 10
 
   function handlePageChange(pageNumber) {
@@ -68,7 +68,7 @@ export default function CategoryDetails() {
     try {
       const { data } = await itemServices.getCategoryItems(id, 1, 10000);
       setLoadingAllCategories(false)
-      setTotalCategoryItems(data?.Data?.length)
+      setTotalCategoryItems(data?.totalResult)
       setCategoryItems([])
     } catch (e) {
       setLoadingAllCategories(false)
@@ -126,7 +126,7 @@ export default function CategoryDetails() {
   }
 
   function fetchMoreData() {
-    if (categoryItems.length < totalCategoryItems) {
+    if (categoryItems?.length < totalCategoryItems) {
       getCategoryItemsHandler(params?.id, PAGE_NUMBER, LIMIT)
     }
   }
@@ -156,7 +156,7 @@ export default function CategoryDetails() {
     </div>}
 
     {loading ? (<div className="overlay"><OverlayLoading /></div>) : (
-      <div className="row">
+      <div className="row cat-page">
         <div className="col-md-12 text-center">
           {
             errorMessage ?
@@ -228,9 +228,9 @@ export default function CategoryDetails() {
 
         <div className='cat-items-style'><p>Category Items</p></div>
         <InfiniteScroll
-          dataLength={categoryItems.length}
+          dataLength={categoryItems?.length}
           next={fetchMoreData}
-          hasMore={categoryItems.length < totalCategoryItems}
+          hasMore={categoryItems?.length < totalCategoryItems}
           loader={<h4 className='loading-infinity-scroll'><i className="spinner-border"></i></h4>}
           endMessage={
             <p style={{ textAlign: 'center', marginBottom: '20px' }}>

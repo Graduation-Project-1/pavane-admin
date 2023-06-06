@@ -27,7 +27,7 @@ export default function BrandDetails() {
   const [currentPage, setCurrentPage] = useState(1)
   const [brands, setBrands] = useState([])
 
-  let PAGE_NUMBER = parseInt(Math.ceil(brandItems.length / 10) + 1)
+  let PAGE_NUMBER = parseInt(Math.ceil(brandItems?.length / 10) + 1)
   let LIMIT = 10
 
   function handlePageChange(pageNumber = 1) {
@@ -70,7 +70,7 @@ export default function BrandDetails() {
     setLoadingAllItems(true)
     try {
       const { data } = await itemServices.getBrandItems(id, 1, 10000);
-      setTotalBrandItems(data?.Data?.length)
+      setTotalBrandItems(data?.totalResult)
       setLoadingAllItems(false)
       setBrandItems([])
     } catch (e) {
@@ -154,7 +154,7 @@ export default function BrandDetails() {
   }
 
   function fetchMoreData() {
-    if (brandItems.length < totalBrandItems) {
+    if (brandItems?.length < totalBrandItems) {
       getBrandItemsHandler(params?.id, PAGE_NUMBER, LIMIT)
     }
   }
@@ -290,9 +290,9 @@ export default function BrandDetails() {
 
         <div className='cat-items-style'><p>Brand Items</p></div>
         <InfiniteScroll
-          dataLength={brandItems.length}
+          dataLength={brandItems?.length}
           next={fetchMoreData}
-          hasMore={brandItems.length < totalBrandItems}
+          hasMore={brandItems?.length < totalBrandItems}
           loader={<h4 className='loading-infinity-scroll'><i className="spinner-border"></i></h4>}
           endMessage={
             <p style={{ textAlign: 'center', marginBottom: '20px' }}>
