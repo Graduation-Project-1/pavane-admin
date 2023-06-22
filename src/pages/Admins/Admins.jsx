@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import OverlayLoading from '../../components/OverlayLoading/OverlayLoading'
 import Pagination from "react-js-pagination";
 import adminServices from '../../services/adminServices'
@@ -8,38 +8,39 @@ import './Admins.scss'
 export default function Admins() {
 
   const navigate = useNavigate()
+  const params = useParams()
 
   const [loading, setLoading] = useState(false)
   const [admins, setAdmins] = useState([])
   const [errorMessage, setErrorMessage] = useState("");
-  const [currentPage, setCurrentPage] = useState(1)
+  const [currentPage, setCurrentPage] = useState(params?.pageNumber ? parseInt(params?.pageNumber) : 1)
   const [postPerPage, setPostPerPage] = useState(10)
   const [totalResult, setTotalResult] = useState(0)
 
   function handlePageChange(pageNumber) {
+    navigate(`/admins/page/${pageNumber}`)
     setCurrentPage(pageNumber)
   }
 
-  async function getAllAdminsHandler(currentPage) {
+  async function getAllAdminsHandler() {
     setLoading(true)
     try {
-      const { data } = await adminServices.getAllAdmins(currentPage);
+      const { data } = await adminServices.getAllAdmins(params?.pageNumber);
       setLoading(true)
-      if (data.success && data.status === 200) {
+      if (data?.success && data?.status === 200) {
         setLoading(false);
-        setAdmins(data.Data)
-        setTotalResult(data.totalResult)
-
+        setAdmins(data?.Data)
+        setTotalResult(data?.totalResult)
       }
     } catch (e) {
       setLoading(false);
-      setErrorMessage(e.response.data.message);
+      setErrorMessage(e?.response?.data?.message);
     }
   }
 
   useEffect(() => {
-    getAllAdminsHandler(currentPage)
-  }, [currentPage])
+    getAllAdminsHandler(params?.pageNumber)
+  }, [params?.pageNumber])
 
   return <>
     <div className="admins">
@@ -79,12 +80,13 @@ export default function Admins() {
                   (
                     admins.map((admin, index) => {
                       return (
-                        <tr key={admin._id}
-                          onClick={() => navigate(`/admins/${admin._id}`)}>
+                        <tr key={admin?._id}
+
+                          onClick={() => navigate(`/admins/page/${params?.pageNumber ? params?.pageNumber : 1}/${admin?._id}`)}>
                           <td>{index + 1}</td>
-                          <td>{admin.name}</td>
-                          <td>{admin.email}</td>
-                          <td>{admin.role}</td>
+                          <td>{admin?.name}</td>
+                          <td>{admin?.email}</td>
+                          <td>{admin?.role}</td>
                         </tr>
                       )
                     })

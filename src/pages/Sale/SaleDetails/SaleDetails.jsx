@@ -1,44 +1,44 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import collectionServices from '../../../services/collectionServices'
+import saleServices from '../../../services/saleServices'
 import toastPopup from '../../../helpers/toastPopup'
 import OverlayLoading from '../../../components/OverlayLoading/OverlayLoading'
 import imageEndPoint from '../../../services/imagesEndPoint'
 import Pagination from 'react-js-pagination'
-import './CollectionDetails.scss'
+import './SaleDetails.scss'
 
-export default function CollectionDetails() {
+export default function SaleDetails() {
 
   const params = useParams()
   const navigate = useNavigate()
 
   const [loading, setLoading] = useState(false)
   const [archiveLoading, setArchiveLoading] = useState(false)
-  const [collection, setCollection] = useState({})
+  const [sale, setSale] = useState({})
   const [categories, setCategories] = useState([])
   const [errorMessage, setErrorMessage] = useState("");
   const [modalShow, setModalShow] = useState(false)
-  const [collectionItems, setCollectionItems] = useState([])
+  const [saleItems, setSaleItems] = useState([])
   const [totalResult, setTotalResult] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
-  const [Collections, setCollections] = useState([])
+  const [sales, setSales] = useState([])
 
   function handlePageChange(pageNumber = 1) {
     setCurrentPage(pageNumber)
-    navigate(`/collections/${Collections[pageNumber - 1]?._id}`)
-    getCollectionByIdHandler(Collections[pageNumber - 1]?._id)
+    navigate(`/sale/${sales[pageNumber - 1]?._id}`)
+    getSaleByIdHandler(sales[pageNumber - 1]?._id)
   }
 
-  async function getCollectionByIdHandler(id = params?.id) {
+  async function getSaleByIdHandler(id = params?.id) {
     setLoading(true)
     try {
-      const { data } = await collectionServices.getCollectionById(id);
+      const { data } = await saleServices.getSaleById(id);
       setLoading(true)
       if (data?.success && data?.status === 200) {
         setLoading(false);
-        setCollection(data?.Data)
+        setSale(data?.Data)
         setCategories(data?.Data?.categoryList)
-        setCollectionItems(data?.Data?.itemsList)
+        setSaleItems(data?.Data?.itemsList)
       }
     } catch (e) {
       setLoading(false);
@@ -46,14 +46,14 @@ export default function CollectionDetails() {
     }
   }
 
-  async function getAllCollectionsHandler() {
+  async function getAllSalesHandler() {
     setLoading(true)
     try {
-      const { data } = await collectionServices.getAllCollections(1, 5000);
+      const { data } = await saleServices.getAllSales(1, 5000);
       setLoading(true)
       if (data?.success && data?.status === 200) {
         setLoading(false);
-        setCollections(data?.Data)
+        setSales(data?.Data)
         setTotalResult(data?.totalResult)
         setCurrentPage(data?.Data?.findIndex(obj => obj?._id === params?.id) + 1)
       }
@@ -63,28 +63,28 @@ export default function CollectionDetails() {
     }
   }
 
-  async function deleteCollectionHandler() {
-    let nextCollection = Collections[currentPage]?._id;
-    let firstCollection = Collections[0]?._id;
+  async function deleteSaleHandler() {
+    let nextSale = sales[currentPage]?._id;
+    let firstSale = sales[0]?._id;
     setLoading(true)
     try {
-      const { data } = await collectionServices.deleteCollection(params?.id)
+      const { data } = await saleServices.deleteSale(params?.id)
       setLoading(true)
       if (data?.success && data?.status === 200) {
         setModalShow(false)
         setLoading(false);
-        if (Collections?.length === 1) {
-          navigate(`/collections`)
-        } else if (currentPage === Collections?.length) {
-          navigate(`/collections/${firstCollection}`)
-          getCollectionByIdHandler(firstCollection)
-          getAllCollectionsHandler()
+        if (sales?.length === 1) {
+          navigate(`/sale`)
+        } else if (currentPage === sales?.length) {
+          navigate(`/sale/${firstSale}`)
+          getSaleByIdHandler(firstSale)
+          getAllSalesHandler()
         } else {
-          navigate(`/collections/${nextCollection}`)
-          getCollectionByIdHandler(nextCollection)
-          getAllCollectionsHandler()
+          navigate(`/sale/${nextSale}`)
+          getSaleByIdHandler(nextSale)
+          getAllSalesHandler()
         }
-        toastPopup.success("Collection deleted successfully")
+        toastPopup.success("Sale deleted successfully")
       }
     } catch (e) {
       setLoading(false);
@@ -95,10 +95,10 @@ export default function CollectionDetails() {
   async function addToArchiveHandler() {
     setArchiveLoading(true)
     try {
-      const { data } = await collectionServices.addToArchive(params?.id)
+      const { data } = await saleServices.addToArchive(params?.id)
       setArchiveLoading(false);
-      getCollectionByIdHandler()
-      toastPopup.success("Collection added to archive successfully")
+      getSaleByIdHandler()
+      toastPopup.success("Sale added to archive successfully")
     } catch (e) {
       setLoading(false);
       setErrorMessage(e?.response?.data?.message);
@@ -108,10 +108,10 @@ export default function CollectionDetails() {
   async function removeFromArchiveHandler() {
     setArchiveLoading(true)
     try {
-      const { data } = await collectionServices.removeFromArchive(params?.id)
+      const { data } = await saleServices.removeFromArchive(params?.id)
       setArchiveLoading(false);
-      getCollectionByIdHandler()
-      toastPopup.success("Collection removed from archive successfully")
+      getSaleByIdHandler()
+      toastPopup.success("Sale removed from archive successfully")
     } catch (e) {
       setLoading(false);
       setErrorMessage(e?.response?.data?.message);
@@ -119,8 +119,8 @@ export default function CollectionDetails() {
   }
 
   useEffect(() => {
-    getCollectionByIdHandler()
-    getAllCollectionsHandler()
+    getSaleByIdHandler()
+    getAllSalesHandler()
   }, [])
 
   return <>
@@ -132,7 +132,7 @@ export default function CollectionDetails() {
             className='btn btn-dark w-50'>
             Cancel
           </div>
-          <div onClick={() => { deleteCollectionHandler() }}
+          <div onClick={() => { deleteSaleHandler() }}
             className='delete btn btn-danger w-50'>
             Delete
           </div>
@@ -153,8 +153,8 @@ export default function CollectionDetails() {
         <div>
           <button className='back' onClick={() => {
             params?.pageNumber ?
-              navigate(`/collections/page/${params?.pageNumber}`)
-              : navigate(`/collections`)
+              navigate(`/sale/page/${params?.pageNumber}`)
+              : navigate(`/sale`)
           }}>
             <i className="fa-solid fa-arrow-left"></i>
           </button>
@@ -163,13 +163,13 @@ export default function CollectionDetails() {
           <div className="image">
             <img
               src={
-                collection?.image ?
-                  collection?.image?.includes('https://') ?
-                    collection?.image :
-                    `${imageEndPoint}${collection?.image}`
+                sale?.image ?
+                  sale?.image?.includes('https://') ?
+                    sale?.image :
+                    `${imageEndPoint}${sale?.image}`
                   : "https://www.lcca.org.uk/media/574173/brand.jpg"
               }
-              alt="Collection Image"
+              alt="Sale Image"
               className='category-image' />
           </div>
         </div>
@@ -180,14 +180,14 @@ export default function CollectionDetails() {
                 <div className="actions">
                   <button onClick={() => {
                     params?.pageNumber ?
-                      navigate(`/collections/page/${params?.pageNumber}/${params?.id}/edit`)
-                      : navigate(`/collections/${params?.id}/edit`)
+                      navigate(`/sale/page/${params?.pageNumber}/${params?.id}/edit`)
+                      : navigate(`/sale/${params?.id}/edit`)
                   }}
                     className='edit btn btn-warning'>
                     Edit
                   </button>
                   {
-                    collection?.isArchived ? (
+                    sale?.isArchived ? (
                       <button
                         className='edit btn btn-warning'
                         onClick={removeFromArchiveHandler}>
@@ -208,20 +208,18 @@ export default function CollectionDetails() {
                 </div>
               </div>
             </div>
-            <h2>{collection?.name}</h2>
-            <p className='brand-click' onClick={() => { navigate(`/brands/${collection?.brandId?._id}`) }}><span>Collection Brand:</span> {collection?.brandId?.name}</p>
-            <p><span>Collection Season:</span> {collection?.season}</p>
-            <p><span>Collection Date:</span> {new Date(collection?.date).toDateString()}</p>
-            <p><span>Collection Discount:</span> {collection?.discountRate}</p>
-            <p><span>Collection Likes:</span> {collection?.numberOfLikes}</p>
-            <p><span>Collection Reviews:</span> {collection?.numberOfReviews}</p>
-            <p><span>Collection Rate:</span> {collection?.averageRate}</p>
-            <p><span>Collection Categories:</span> {
+            <h2>{sale?.name}</h2>
+            <p className='brand-click' onClick={() => { navigate(`/brands/${sale?.brandId?._id}`) }}><span>Sale Brand:</span> {sale?.brandId?.name}</p>
+            <p><span>Sale Season:</span> {sale?.season}</p>
+            <p><span>Sale Date:</span> {new Date(sale?.date).toDateString()}</p>
+            <p><span>Sale Discount:</span> {sale?.discountRate}</p>
+            <p><span>Sale Likes:</span> {sale?.numberOfLikes}</p>
+            <p><span>Sale Categories:</span> {
               categories?.map((category) => {
                 return category?.name + ", "
               })
             }</p>
-            <p><span>Number of items:</span> {collection?.itemsList?.length}</p>
+            <p><span>Number of items:</span> {sale?.itemsList?.length}</p>
           </div>
         </div>
 
@@ -240,7 +238,7 @@ export default function CollectionDetails() {
         <div className='cat-items-style'><p>Brand Items</p></div>
         <div className="row">
           {
-            collectionItems?.map((item) => {
+            saleItems?.map((item) => {
               return (
                 <div className="col-md-3" key={item?._id}>
                   <div className="item" onClick={() => navigate(`/items/${item?._id}`)}>

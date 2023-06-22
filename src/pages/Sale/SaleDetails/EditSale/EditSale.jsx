@@ -1,15 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
-import collectionServices from '../../../../services/collectionServices';
+import saleServices from '../../../../services/saleServices';
 import toastPopup from '../../../../helpers/toastPopup';
+import brandServices from '../../../../services/brandServices';
 import categoryServices from '../../../../services/categoryServices';
+import itemServices from '../../../../services/itemServices';
 import imageEndPoint from '../../../../services/imagesEndPoint'
 import Multiselect from 'multiselect-react-dropdown';
-import brandServices from '../../../../services/brandServices';
-import itemServices from '../../../../services/itemServices';
-import './EditCollection.scss'
+import './EditSale.scss'
 
-export default function EditCollection() {
+export default function EditSale() {
 
   const params = useParams()
   const navigate = useNavigate()
@@ -23,7 +23,7 @@ export default function EditCollection() {
   const [brands, setBrands] = useState([])
   const [items, setItems] = useState([])
 
-  const [oldCollection, setOldCollection] = useState({
+  const [oldSale, setOldSale] = useState({
     name: "",
     season: "",
     discountRate: 0,
@@ -33,7 +33,7 @@ export default function EditCollection() {
     brandId: ""
   })
 
-  const [newCollection, setNewCollection] = useState({
+  const [newSale, setNewSale] = useState({
     name: "",
     season: "",
     discountRate: 0,
@@ -54,14 +54,14 @@ export default function EditCollection() {
     return finalEditiedData
   }
 
-  async function getCollectionByIdHandler() {
+  async function getSaleByIdHandler() {
     setLoading(true)
     try {
-      const { data } = await collectionServices.getCollectionById(params?.id);
+      const { data } = await saleServices.getSaleById(params?.id);
       setLoading(true)
       if (data?.success && data?.status === 200) {
         setLoading(false);
-        setOldCollection({
+        setOldSale({
           name: data?.Data?.name,
           season: data?.Data?.season,
           discountRate: data?.Data?.discountRate,
@@ -70,7 +70,8 @@ export default function EditCollection() {
           itemsList: data?.Data?.itemsList?.map((item) => { return item?._id }),
           brandId: data?.Data?.brandId?._id,
         })
-        setNewCollection({
+
+        setNewSale({
           name: data?.Data?.name,
           season: data?.Data?.season,
           discountRate: data?.Data?.discountRate,
@@ -89,26 +90,26 @@ export default function EditCollection() {
     }
   }
 
-  function getNewCollectionData(e) {
-    let newCollectionData = { ...newCollection }
-    newCollectionData[e.target.name] = e.target.value
-    setNewCollection(newCollectionData)
+  function getNewSaleData(e) {
+    let newSaleData = { ...newSale }
+    newSaleData[e.target.name] = e.target.value
+    setNewSale(newSaleData)
   }
 
-  async function editCollectionHandler(e) {
+  async function editSaleHandler(e) {
     e.preventDefault();
     setLoading(true);
     let editedData = {};
 
-    Object.keys(checkUpdatedFields(newCollection, oldCollection)).forEach((key) => {
+    Object.keys(checkUpdatedFields(newSale, oldSale)).forEach((key) => {
       editedData = {
         ...editedData,
-        [key]: newCollection[key]
+        [key]: newSale[key]
       }
     })
 
     try {
-      const { data } = await collectionServices.editCollection(params?.id, editedData)
+      const { data } = await saleServices.editSale(params?.id, editedData)
       if (data?.success && data?.status === 200) {
         setLoading(false);
         if (typeof (uploadImage) === 'object') {
@@ -117,7 +118,7 @@ export default function EditCollection() {
           setLoading(true);
           try {
             const { data } = typeof uploadImage === "object" &&
-              await collectionServices.uploadImageCollection(params?.id, formData)
+              await saleServices.uploadImageSale(params?.id, formData)
             if (data?.success && data?.status === 200) {
               setLoading(false);
             }
@@ -127,11 +128,11 @@ export default function EditCollection() {
           }
         }
         if (params?.pageNumber) {
-          navigate(`/collections/page/${params?.pageNumber}/${params?.id}`)
+          navigate(`/sale/page/${params?.pageNumber}/${params?.id}`)
         } else {
-          navigate(`/collections/${params?.id}`)
+          navigate(`/sale/${params?.id}`)
         }
-        toastPopup.success("Collection updated successfully")
+        toastPopup.success("Sale updated successfully")
       }
     } catch (error) {
       setLoading(false);
@@ -175,16 +176,16 @@ export default function EditCollection() {
   }
 
   function isSelectedCategory(categoreyId) {
-    return newCollection["categoryList"].includes(categoreyId)
+    return newSale["categoryList"].includes(categoreyId)
   }
 
   function toggleSelectedCategoriesHandler(categoryId) {
     if (isSelectedCategory(categoryId)) {
-      let oldSelectedCategories = newCollection["categoryList"]
+      let oldSelectedCategories = newSale["categoryList"]
       let newSelectedCategories = oldSelectedCategories.filter((category) => { return category !== categoryId })
-      setNewCollection((prev) => { return { ...prev, categoryList: newSelectedCategories } })
+      setNewSale((prev) => { return { ...prev, categoryList: newSelectedCategories } })
     } else {
-      setNewCollection((prev) => { return { ...prev, categoryList: [...prev.categoryList, categoryId] } })
+      setNewSale((prev) => { return { ...prev, categoryList: [...prev.categoryList, categoryId] } })
     }
   }
 
@@ -218,16 +219,16 @@ export default function EditCollection() {
   }
 
   function isSelectedItem(itemId) {
-    return newCollection["itemsList"].includes(itemId)
+    return newSale["itemsList"].includes(itemId)
   }
 
   function toggleSelectedItemsHandler(itemId) {
     if (isSelectedItem(itemId)) {
-      let oldSelectedItems = newCollection["itemsList"]
+      let oldSelectedItems = newSale["itemsList"]
       let newSelectedItems = oldSelectedItems.filter((item) => { return item !== itemId })
-      setNewCollection((prev) => { return { ...prev, itemsList: newSelectedItems } })
+      setNewSale((prev) => { return { ...prev, itemsList: newSelectedItems } })
     } else {
-      setNewCollection((prev) => { return { ...prev, itemsList: [...prev.itemsList, itemId] } })
+      setNewSale((prev) => { return { ...prev, itemsList: [...prev.itemsList, itemId] } })
     }
   }
 
@@ -246,23 +247,23 @@ export default function EditCollection() {
   })
 
   useEffect(() => {
-    getCollectionByIdHandler()
+    getSaleByIdHandler()
     getAllCategoriesHandler()
     getAllBrandsHandler()
   }, [])
 
   useEffect(() => {
-    getAllBrandItemsHandler(newCollection?.brandId)
-  }, [newCollection?.brandId])
+    getAllBrandItemsHandler(newSale?.brandId)
+  }, [newSale?.brandId])
 
-  let date = (newCollection?.date)?.split('T')[0]
+  let date = (newSale?.date)?.split('T')[0]
 
   return <>
     <div>
       <button className='back-edit' onClick={() => {
         params?.pageNumber ?
-          navigate(`/collections/page/${params?.pageNumber}/${params?.id}`)
-          : navigate(`/collections/${params?.id}`)
+          navigate(`/sale/page/${params?.pageNumber}/${params?.id}`)
+          : navigate(`/sale/${params?.id}`)
       }}>
         <i className="fa-solid fa-arrow-left"></i>
       </button>
@@ -271,7 +272,7 @@ export default function EditCollection() {
       <div className="col-md-12">
         <div className="edit-collection-page">
           <div className="edit-collection-card">
-            <h3>Edit Collection</h3>
+            <h3>Edit Sale</h3>
             {
               errorMessage ?
                 (<div className="alert alert-danger myalert">
@@ -312,21 +313,21 @@ export default function EditCollection() {
               </label>
             </div>
 
-            <form onSubmit={editCollectionHandler}>
+            <form onSubmit={editSaleHandler}>
               <label htmlFor="name">Name</label>
               <input
-                onChange={getNewCollectionData}
+                onChange={getNewSaleData}
                 className='form-control add-brand-input'
                 type="text"
                 name="name"
                 id="name"
-                value={newCollection?.name}
+                value={newSale?.name}
               />
 
               <label>Season</label>
               <select
                 onChange={(e) => {
-                  setNewCollection((prev) => {
+                  setNewSale((prev) => {
                     return { ...prev, season: e.target.value };
                   });
                 }}
@@ -334,7 +335,7 @@ export default function EditCollection() {
                 id="season"
                 name="season"
                 title='season'
-                value={newCollection?.season}>
+                value={newSale?.season}>
                 <option value=''>-- Season --</option>
                 <option value='winter'>Winter</option>
                 <option value='spring'>Spring</option>
@@ -344,7 +345,7 @@ export default function EditCollection() {
 
               <label htmlFor="date">Date</label>
               <input
-                onChange={getNewCollectionData}
+                onChange={getNewSaleData}
                 type="date"
                 name="date"
                 id="date"
@@ -354,12 +355,12 @@ export default function EditCollection() {
 
               <label htmlFor="name">Discount</label>
               <input
-                onChange={getNewCollectionData}
+                onChange={getNewSaleData}
                 className='form-control add-collection-input'
                 type="number"
                 name="discountRate"
                 id="discount"
-                value={newCollection?.discountRate}
+                value={newSale?.discountRate}
               />
 
               <p className='select-categories'>Select Categories</p>
@@ -396,7 +397,7 @@ export default function EditCollection() {
               <button className='add-collection-button'>
                 {loading ?
                   (<i className="fas fa-spinner fa-spin "></i>)
-                  : "Edit Collection"}
+                  : "Edit Sale"}
               </button>
             </form>
           </div>

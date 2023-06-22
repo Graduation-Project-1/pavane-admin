@@ -2,6 +2,8 @@ import Joi from 'joi'
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import advertisementServices from '../../../../services/advertisementServices'
+import imageEndPoint from '../../../../services/imagesEndPoint'
+import toastPopup from '../../../../helpers/toastPopup'
 import './EditAdvertisement.scss'
 
 export default function EditAdvertisement() {
@@ -16,12 +18,18 @@ export default function EditAdvertisement() {
 
   const [oldAdvertisement, setOldAdvertisement] = useState({
     name: "",
-    link: ""
+    link: "",
+    creatorName: "",
+    startDate: "",
+    endDate: ""
   })
 
   const [newAdvertisement, setNewAdvertisement] = useState({
     name: "",
-    link: ""
+    link: "",
+    creatorName: "",
+    startDate: "",
+    endDate: ""
   })
 
   function checkUpdatedFields(newData, oldData) {
@@ -38,23 +46,29 @@ export default function EditAdvertisement() {
   async function getAdvertisementByIdHandler() {
     setLoading(true)
     try {
-      const { data } = await advertisementServices.getAdvertisementById(params.id);
+      const { data } = await advertisementServices.getAdvertisementById(params?.id);
       setLoading(true)
-      if (data.success && data.status === 200) {
+      if (data?.success && data?.status === 200) {
         setLoading(false);
         setOldAdvertisement({
           name: data?.Data?.name,
-          link: data?.Data?.link
+          link: data?.Data?.link,
+          creatorName: data?.Data?.creatorName,
+          startDate: data?.Data?.startDate,
+          endDate: data?.Data?.endDate
         })
         setNewAdvertisement({
           name: data?.Data?.name,
-          link: data?.Data?.link
+          link: data?.Data?.link,
+          creatorName: data?.Data?.creatorName,
+          startDate: data?.Data?.startDate,
+          endDate: data?.Data?.endDate
         })
         setUploadImage(data?.Data?.image)
       }
     } catch (e) {
       setLoading(false);
-      setErrorMessage(e.response.data.message);
+      setErrorMessage(e?.response?.data?.message);
     }
   }
 
@@ -69,9 +83,16 @@ export default function EditAdvertisement() {
       name: Joi.string()
         .pattern(/^[a-zA-Z &_\-'"\\|,.\/]*$/)
         .min(3)
-        .max(30)
+        .max(100)
         .required(),
-      link: Joi.string()
+      link: Joi.string(),
+      creatorName: Joi.string()
+        .pattern(/^[a-zA-Z &_\-'"\\|,.\/]*$/)
+        .min(3)
+        .max(100)
+        .required(),
+      startDate: Joi.string(),
+      endDate: Joi.string(),
     });
     return schema.validate(newAdvertisement, { abortEarly: false });
   }
@@ -81,9 +102,9 @@ export default function EditAdvertisement() {
     setErrorList([]);
     let validationResult = editAdvertisementValidation(newAdvertisement);
     setLoading(true);
-    if (validationResult.error) {
+    if (validationResult?.error) {
       setLoading(false);
-      setErrorList(validationResult.error.details);
+      setErrorList(validationResult?.error?.details);
     } else {
       setLoading(true);
       let editedData = {};
@@ -95,27 +116,30 @@ export default function EditAdvertisement() {
         }
       })
       try {
-        const { data } = await advertisementServices.editAdvertisement(params.id, editedData)
-        if (data.success && data.status === 200) {
+        const { data } = await advertisementServices.editAdvertisement(params?.id, editedData)
+        if (data?.success && data?.status === 200) {
           setLoading(false);
-          var formData = new FormData();
-          formData.append("images", uploadImage);
-          setLoading(true);
-          try {
-            const { data } = typeof uploadImage === "object" &&
-              await advertisementServices.uploadImageAdvertisement(params.id, formData)
-            if (data.success && data.code === 200) {
+          if (typeof (uploadImage) === 'object') {
+            var formData = new FormData();
+            formData.append("images", uploadImage);
+            setLoading(true);
+            try {
+              const { data } = typeof uploadImage === "object" &&
+                await advertisementServices.uploadImageAdvertisement(params?.id, formData)
+              if (data?.success && data?.code === 200) {
+                setLoading(false);
+              }
+            } catch (error) {
               setLoading(false);
+              setErrorMessage(error);
             }
-          } catch (error) {
-            setLoading(false);
-            setErrorMessage(error);
           }
-          navigate(`/advertisements/${params.id}`);
+          navigate(`/advertisements/${params?.id}`);
+          toastPopup.success("Advertisement updated successfully")
         }
       } catch (error) {
         setLoading(false);
-        setErrorMessage(error.response.data.message);
+        setErrorMessage(error?.response?.data?.message);
       }
     }
   };
@@ -129,7 +153,15 @@ export default function EditAdvertisement() {
     getAdvertisementByIdHandler()
   }, [])
 
+  let start_date = (newAdvertisement?.startDate)?.split('T')[0]
+  let end_date = (newAdvertisement?.endDate)?.split('T')[0]
+
   return <>
+    <div>
+      <button className='back-edit' onClick={() => { navigate(`/advertisements/${params?.id}`) }}>
+        <i className="fa-solid fa-arrow-left"></i>
+      </button>
+    </div>
     <div className="row">
       <div className="col-md-12">
         <div className="edit-advertisement-page">
@@ -145,7 +177,7 @@ export default function EditAdvertisement() {
               errorList.map((err, index) => {
                 return (
                   <div key={index} className="alert alert-danger myalert">
-                    {err.message}
+                    {err?.message}
                   </div>
                 )
               })
@@ -155,7 +187,7 @@ export default function EditAdvertisement() {
                 <img
                   src={typeof uploadImage === "object" ?
                     URL.createObjectURL(uploadImage) :
-                    (`https://graduation-project-23.s3.amazonaws.com/${uploadImage}`)}
+                    (`${imageEndPoint}${uploadImage}`)}
                   alt="imag-viewer"
                   className="uploaded-img"
                   onClick={() => {
@@ -182,6 +214,7 @@ export default function EditAdvertisement() {
                 Add Advertisement
               </label>
             </div>
+
             <form onSubmit={editAdvertisementHandler}>
               <label htmlFor="name">Name</label>
               <input
@@ -190,8 +223,9 @@ export default function EditAdvertisement() {
                 type="text"
                 name="name"
                 id="name"
-                value={newAdvertisement.name}
+                value={newAdvertisement?.name}
               />
+
               <label htmlFor="link">Link</label>
               <input
                 onChange={getNewAdvertisementData}
@@ -199,8 +233,43 @@ export default function EditAdvertisement() {
                 type="text"
                 name="link"
                 id="link"
-                value={newAdvertisement.link}
+                value={newAdvertisement?.link}
               />
+
+              <label htmlFor="creatorName">Advertisor</label>
+              <input
+                onChange={getNewAdvertisementData}
+                className='form-control add-advertisement-input'
+                type="text"
+                name="creatorName"
+                id="creatorName"
+                value={newAdvertisement?.creatorName}
+              />
+
+              <label htmlFor="startDate">Start date</label>
+              <div className="date add-customer-input">
+                <input
+                  onChange={getNewAdvertisementData}
+                  type="date"
+                  name="startDate"
+                  id="startDate"
+                  className='form-control add-advertisement-input'
+                  value={start_date}
+                />
+
+              </div>
+              <label htmlFor="endDate">End date</label>
+              <div className="date add-customer-input">
+                <input
+                  onChange={getNewAdvertisementData}
+                  type="date"
+                  name="endDate"
+                  id="endDate"
+                  className='form-control add-advertisement-input'
+                  value={end_date}
+                />
+
+              </div>
               <button className='add-advertisement-button'>
                 {loading ?
                   (<i className="fas fa-spinner fa-spin "></i>)

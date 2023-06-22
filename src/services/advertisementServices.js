@@ -30,6 +30,16 @@ let advertisementServices = {
     const response = await Axios.get(`getAllAdvertisement`)
     return response
   },
+
+  addToArchive: async (id) => {
+    const response = await Axios.put(`archiveAdvertisement/${id}`)
+    return response
+  },
+
+  removeFromArchive: async (id) => {
+    const response = await Axios.put(`disArchiveAdvertisement/${id}`)
+    return response
+  },
 }
 
 export default advertisementServices;

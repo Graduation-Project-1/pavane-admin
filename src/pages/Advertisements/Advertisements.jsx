@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import OverlayLoading from '../../components/OverlayLoading/OverlayLoading'
 import advertisementServices from '../../services/advertisementServices';
+import imageEndPoint from '../../services/imagesEndPoint'
 import './Advertisements.scss'
 
 export default function Advertisements() {
@@ -17,13 +18,13 @@ export default function Advertisements() {
     try {
       const { data } = await advertisementServices.getAllAdvertisement();
       setLoading(true)
-      if (data.success && data.status === 200) {
+      if (data?.success && data?.status === 200) {
         setLoading(false);
-        setAdvertisements(data.Data)
+        setAdvertisements(data?.Data)
       }
     } catch (e) {
       setLoading(false);
-      setErrorMessage(e.response.data.message);
+      setErrorMessage(e?.response?.data?.message);
     }
   }
 
@@ -59,12 +60,12 @@ export default function Advertisements() {
               <div className="advertisement-data">
                 <div id="carouselExampleControls" className="carousel slide" data-bs-ride="carousel">
                   <div className="carousel-inner">
-                    {advertisements.map((advertisement, index) => {
+                    {advertisements?.map((advertisement) => {
                       return (
-                        <div className="carousel-item active" key={advertisement._id} onClick={() => navigate(`/advertisements/${advertisement._id}`)}>
-                          <img src={`https://graduation-project-23.s3.amazonaws.com/${advertisement.image}`}
+                        <div className="carousel-item active" key={advertisement?._id} onClick={() => navigate(`/advertisements/${advertisement?._id}`)}>
+                          <img src={`${imageEndPoint}${advertisement?.image}`}
                             className="d-block w-100"
-                            alt="..." />
+                            alt="Advertisement Image" />
                         </div>
                       )
                     })}

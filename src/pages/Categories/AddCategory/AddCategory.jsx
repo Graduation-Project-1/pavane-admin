@@ -55,7 +55,7 @@ export default function AddCategory() {
           name: newCategory?.name
         }
         const { data } = await categoryServices.addCategory(categoryData)
-        if (data.success && data.message === "categoryAdded") {
+        if (data?.success && data?.message === "categoryAdded") {
           setLoading(false);
           let categoryID = data?.Data?._id
           var formData = new FormData();
@@ -102,7 +102,7 @@ export default function AddCategory() {
               errorList.map((err, index) => {
                 return (
                   <div key={index} className="alert alert-danger myalert">
-                    {err.message}
+                    {err?.message}
                   </div>
                 )
               })

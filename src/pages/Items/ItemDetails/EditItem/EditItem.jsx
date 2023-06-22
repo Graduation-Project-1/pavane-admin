@@ -80,7 +80,7 @@ export default function EditItem() {
           sizes: data?.Data?.sizes,
           discountRate: data?.Data?.discountRate,
           brandId: data?.Data?.brandId?._id,
-          categoryList: data?.Data?.categoryList.map((cat) => { return cat._id })
+          categoryList: data?.Data?.categoryList.map((cat) => { return cat?._id })
         })
         setNewItem({
           name: data?.Data?.name,
@@ -91,7 +91,7 @@ export default function EditItem() {
           sizes: data?.Data?.sizes,
           discountRate: data?.Data?.discountRate,
           brandId: data?.Data?.brandId?._id,
-          categoryList: data?.Data?.categoryList.map((cat) => { return cat._id })
+          categoryList: data?.Data?.categoryList.map((cat) => { return cat?._id })
         })
         setUploadCover(data?.Data?.cover)
         setSelectedCategories(data?.Data?.categoryList)
@@ -100,7 +100,7 @@ export default function EditItem() {
       }
     } catch (e) {
       setLoading(false);
-      setErrorMessage(e.response.data.message);
+      setErrorMessage(e?.response?.data?.message);
     }
   }
 
@@ -128,30 +128,33 @@ export default function EditItem() {
       var formData = new FormData();
       formData.append("images", uploadCover);
       setLoading(true);
-      try {
-        const { data } = typeof uploadCover === "object" && await itemServices.uploadItemCover(params?.id, formData)
-        if (data?.success && data?.status === 200) {
+      if (typeof (uploadCover) === 'object') {
+        try {
+          const { data } = typeof uploadCover === "object" && await itemServices.uploadItemCover(params?.id, formData)
+          if (data?.success && data?.status === 200) {
+            setLoading(false);
+          }
+        } catch (error) {
           setLoading(false);
+          setErrorMessage(error);
         }
-      } catch (error) {
-        setLoading(false);
-        setErrorMessage(error);
       }
-
-      var imagesFormData = new FormData();
-      uploadImages.forEach((image) => {
-        imagesFormData.append('images', image.file);
-      });
-      setLoading(true)
-      try {
-        const { data } = await itemServices.uploadItemImages(params?.id, imagesFormData)
+      if (uploadImages.length > 0) {
+        var imagesFormData = new FormData();
+        uploadImages.forEach((image) => {
+          imagesFormData.append('images', image.file);
+        });
         setLoading(true)
-        if (data?.success && data?.status === 200) {
+        try {
+          const { data } = await itemServices.uploadItemImages(params?.id, imagesFormData)
+          setLoading(true)
+          if (data?.success && data?.status === 200) {
+            setLoading(false);
+          }
+        } catch (error) {
           setLoading(false);
+          setErrorMessage(error);
         }
-      } catch (error) {
-        setLoading(false);
-        setErrorMessage(error);
       }
       navigate(`/items/page/${params?.pageNumber}/${params?.id}`)
       toastPopup.success("Item updated successfully")
@@ -248,7 +251,7 @@ export default function EditItem() {
   async function deleteItemImage() {
     setLoading(true);
     try {
-      const { data } = await itemServices.deleteImagesFromItem(params.id,
+      const { data } = await itemServices.deleteImagesFromItem(params?.id,
         {
           "images": [
             imageToBeDeleted
@@ -287,7 +290,7 @@ export default function EditItem() {
 
   return <>
     <div>
-      <button className='back-edit' onClick={() => { navigate(`/items/page/${params?.pageNumber}/${params.id}`) }}>
+      <button className='back-edit' onClick={() => { navigate(`/items/page/${params?.pageNumber}/${params?.id}`) }}>
         <i className="fa-solid fa-arrow-left"></i>
       </button>
     </div>
@@ -368,7 +371,7 @@ export default function EditItem() {
                 type="text"
                 name="name"
                 id="name"
-                value={newItem.name}
+                value={newItem?.name}
               />
               <label htmlFor="description">Description</label>
               <input
@@ -377,7 +380,7 @@ export default function EditItem() {
                 type="text"
                 name="description"
                 id="description"
-                value={newItem.description}
+                value={newItem?.description}
               />
               <label htmlFor="price">Price</label>
               <input
@@ -386,7 +389,7 @@ export default function EditItem() {
                 type="number"
                 name="price"
                 id="price"
-                value={newItem.price}
+                value={newItem?.price}
               />
               <label htmlFor="name">Discount</label>
               <input
@@ -395,7 +398,7 @@ export default function EditItem() {
                 type="number"
                 name="discountRate"
                 id="discount"
-                value={newItem.discountRate}
+                value={newItem?.discountRate}
               />
               <label htmlFor="">Gender</label>
               <div className="wrapper add-item-input">
@@ -405,7 +408,7 @@ export default function EditItem() {
                   type="radio"
                   name="gender"
                   id="male"
-                  checked={newItem.gender === 'male'}
+                  checked={newItem?.gender === 'male'}
                 />
                 <input
                   onChange={getNewItemData}
@@ -413,7 +416,7 @@ export default function EditItem() {
                   type="radio"
                   name="gender"
                   id="female"
-                  checked={newItem.gender === 'female'}
+                  checked={newItem?.gender === 'female'}
                 />
                 <label htmlFor="male" className="option male">
                   <div className="dot"></div>
@@ -426,7 +429,7 @@ export default function EditItem() {
               </div>
               <div className="check add-item-input">
                 <input
-                  checked={newItem.isAdult}
+                  checked={newItem?.isAdult}
                   type="checkbox"
                   id="isAdult"
                   onChange={(e) => { setNewItem((prev) => { return { ...prev, isAdult: e.target.checked } }) }} />
@@ -455,11 +458,11 @@ export default function EditItem() {
                 selectedValues={selected_categories}
                 onKeyPressFn={function noRefCheck() { }}
                 onRemove={function noRefCheck(selectedList, selectedItem) {
-                  toggleSelectedCategoriesHandler(selectedItem.id)
+                  toggleSelectedCategoriesHandler(selectedItem?.id)
                 }}
                 onSearch={function noRefCheck() { }}
                 onSelect={function noRefCheck(selectedList, selectedItem) {
-                  toggleSelectedCategoriesHandler(selectedItem.id)
+                  toggleSelectedCategoriesHandler(selectedItem?.id)
                 }}
                 options={categoriesOptions}
                 showCheckbox

@@ -47,7 +47,7 @@ export default function Categories() {
   async function searchCategoryByName(searchValue) {
     try {
       const { data } = await categoryServices.categorySearch(searchValue)
-      if (data.success && data.status === 200) {
+      if (data?.success && data?.status === 200) {
         setCategories(data?.Data)
         setTotalResult(data?.totalResult)
         setHidePagination(true)

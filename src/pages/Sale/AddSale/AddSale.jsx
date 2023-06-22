@@ -2,13 +2,13 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import categoryServices from '../../../services/categoryServices';
 import brandServices from '../../../services/brandServices';
-import collectionServices from '../../../services/collectionServices';
+import itemServices from '../../../services/itemServices';
+import saleServices from '../../../services/saleServices';
 import toastPopup from '../../../helpers/toastPopup';
 import Multiselect from 'multiselect-react-dropdown';
-import itemServices from '../../../services/itemServices';
-import './AddCollection.scss'
+import './AddSale.scss'
 
-export default function AddCollection() {
+export default function AddSale() {
 
   const navigate = useNavigate()
 
@@ -24,15 +24,15 @@ export default function AddCollection() {
   const [season, setSeason] = useState("")
   const [date, setDate] = useState("")
 
-  const [newCollection, setNewCollection] = useState({
+  const [newSale, setNewSale] = useState({
     name: "",
     discountRate: 0
   })
 
-  function getNewCollectionData(e) {
-    let newCollectionData = { ...newCollection }
-    newCollectionData[e.target.name] = e.target.value
-    setNewCollection(newCollectionData)
+  function getNewSaleData(e) {
+    let newSaleData = { ...newSale }
+    newSaleData[e.target.name] = e.target.value
+    setNewSale(newSaleData)
   }
 
   async function getAllCategoriesHandler() {
@@ -136,30 +136,30 @@ export default function AddCollection() {
     })
   })
 
-  async function addCollectionHandler(e) {
+  async function addSaleHandler(e) {
     e.preventDefault();
     setLoading(true);
 
     try {
-      let collectionData = {
-        name: newCollection?.name,
+      let saleData = {
+        name: newSale?.name,
         season: season,
         date: date,
-        discountRate: newCollection?.discountRate,
+        discountRate: newSale?.discountRate,
         categoryList: getFinalCategories(),
         itemsList: getFinalItems(),
         brandId: brand,
       }
 
-      const { data } = await collectionServices.addCollection(collectionData)
+      const { data } = await saleServices.addSale(saleData)
       if (data?.success) {
         setLoading(false);
-        let collectionId = data?.Data?._id
+        let saleId = data?.Data?._id
         var formData = new FormData();
         formData.append("images", uploadImage);
         setLoading(true)
         try {
-          const { data } = await collectionServices.uploadImageCollection(collectionId, formData)
+          const { data } = await saleServices.uploadImageSale(saleId, formData)
           setLoading(true)
           if (data?.success && data?.status === 200) {
             setLoading(false);
@@ -168,8 +168,8 @@ export default function AddCollection() {
           setLoading(false);
           setErrorMessage(error);
         }
-        navigate("/collections");
-        toastPopup.success("Collection added successfully")
+        navigate("/sale");
+        toastPopup.success("Sale added successfully")
       }
     } catch (error) {
       setLoading(false);
@@ -193,7 +193,7 @@ export default function AddCollection() {
 
   return <>
     <div>
-      <button className='back-edit' onClick={() => { navigate(`/collections`) }}>
+      <button className='back-edit' onClick={() => { navigate(`/sale`) }}>
         <i className="fa-solid fa-arrow-left"></i>
       </button>
     </div>
@@ -201,7 +201,7 @@ export default function AddCollection() {
       <div className="col-md-12">
         <div className="add-collection-page">
           <div className="add-collection-card">
-            <h3>Add Collection</h3>
+            <h3>Add Sale</h3>
             {
               errorMessage ?
                 (<div className="alert alert-danger myalert">
@@ -235,14 +235,14 @@ export default function AddCollection() {
                 onClick={imageUploader}
                 htmlFor="upload-img"
               >
-                Add Collection Image
+                Add Sale Image
               </label>
             </div>
 
-            <form onSubmit={addCollectionHandler}>
+            <form onSubmit={addSaleHandler}>
               <label htmlFor="name">Name</label>
               <input
-                onChange={getNewCollectionData}
+                onChange={getNewSaleData}
                 className='form-control add-collection-input'
                 type="text"
                 name="name"
@@ -273,7 +273,7 @@ export default function AddCollection() {
 
               <label htmlFor="name">Discount</label>
               <input
-                onChange={getNewCollectionData}
+                onChange={getNewSaleData}
                 className='form-control add-collection-input'
                 type="number"
                 name="discountRate"
@@ -299,11 +299,11 @@ export default function AddCollection() {
                 displayValue="name"
                 onKeyPressFn={function noRefCheck() { }}
                 onRemove={function noRefCheck(selectedList, selectedItem) {
-                  toggleSelectedCategoriesHandler(selectedItem.id)
+                  toggleSelectedCategoriesHandler(selectedItem?.id)
                 }}
                 onSearch={function noRefCheck() { }}
                 onSelect={function noRefCheck(selectedList, selectedItem) {
-                  toggleSelectedCategoriesHandler(selectedItem.id)
+                  toggleSelectedCategoriesHandler(selectedItem?.id)
                 }}
                 options={categoriesOptions}
                 showCheckbox
@@ -314,11 +314,11 @@ export default function AddCollection() {
                 displayValue="name"
                 onKeyPressFn={function noRefCheck() { }}
                 onRemove={function noRefCheck(selectedList, selectedItem) {
-                  toggleSelectedItemsHandler(selectedItem.id)
+                  toggleSelectedItemsHandler(selectedItem?.id)
                 }}
                 onSearch={function noRefCheck() { }}
                 onSelect={function noRefCheck(selectedList, selectedItem) {
-                  toggleSelectedItemsHandler(selectedItem.id)
+                  toggleSelectedItemsHandler(selectedItem?.id)
                 }}
                 options={itemsOptions}
                 showCheckbox
@@ -327,7 +327,7 @@ export default function AddCollection() {
               <button className='add-collection-button'>
                 {loading ?
                   (<i className="fas fa-spinner fa-spin "></i>)
-                  : "Add Collection"}
+                  : "Add Sale"}
               </button>
             </form>
           </div>

@@ -46,7 +46,7 @@ export default function AddItem() {
   async function getAllCategoriesHandler() {
     setLoading(true)
     try {
-      const { data } = await categoryServices.getAllCategories(1, 5000);
+      const { data } = await categoryServices.getAllCategories(1, 10000);
       setLoading(true)
       if (data?.success && data?.status === 200) {
         setLoading(false);
@@ -389,11 +389,11 @@ export default function AddItem() {
                 displayValue="name"
                 onKeyPressFn={function noRefCheck() { }}
                 onRemove={function noRefCheck(selectedList, selectedItem) {
-                  toggleSelectedCategoriesHandler(selectedItem.id)
+                  toggleSelectedCategoriesHandler(selectedItem?.id)
                 }}
                 onSearch={function noRefCheck() { }}
                 onSelect={function noRefCheck(selectedList, selectedItem) {
-                  toggleSelectedCategoriesHandler(selectedItem.id)
+                  toggleSelectedCategoriesHandler(selectedItem?.id)
                 }}
                 options={categoriesOptions}
                 showCheckbox
@@ -408,7 +408,7 @@ export default function AddItem() {
                 <option value=''>-- Brand --</option>
                 {brands.map((brand) => {
                   return (
-                    <option key={brand._id} value={brand._id}>{brand.name}</option>
+                    <option key={brand?._id} value={brand?._id}>{brand?.name}</option>
                   )
                 })}
               </select>

@@ -2,6 +2,7 @@ import Joi from 'joi'
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import adminServices from '../../../../services/adminServices'
+import toastPopup from '../../../../helpers/toastPopup'
 import './EditAdmin.scss'
 
 export default function EditAdmin() {
@@ -37,9 +38,9 @@ export default function EditAdmin() {
   async function getAdminByIdHandler() {
     setLoading(true)
     try {
-      const { data } = await adminServices.getAdminById(params.id);
+      const { data } = await adminServices.getAdminById(params?.id);
       setLoading(true)
-      if (data.success && data.status === 200) {
+      if (data?.success && data?.status === 200) {
         setLoading(false);
         setOldAdmin({
           name: data?.Data?.name,
@@ -52,7 +53,7 @@ export default function EditAdmin() {
       }
     } catch (e) {
       setLoading(false);
-      setErrorMessage(e.response.data.message);
+      setErrorMessage(e?.response?.data?.message);
     }
   }
 
@@ -81,9 +82,9 @@ export default function EditAdmin() {
     setErrorList([]);
     let validationResult = editAdminValidation(newAdmin);
     setLoading(true);
-    if (validationResult.error) {
+    if (validationResult?.error) {
       setLoading(false);
-      setErrorList(validationResult.error.details);
+      setErrorList(validationResult?.error?.details);
     } else {
       setLoading(true);
       let editedData = {};
@@ -95,14 +96,19 @@ export default function EditAdmin() {
         }
       })
       try {
-        const { data } = await adminServices.editAdmin(params.id, editedData)
-        if (data.success && data.status === 200) {
+        const { data } = await adminServices.editAdmin(params?.id, editedData)
+        if (data?.success && data?.status === 200) {
           setLoading(false);
-          navigate(`/admins/${params.id}`);
+          if (params?.pageNumber) {
+            navigate(`/admins/page/${params?.pageNumber}/${params?.id}`)
+          } else {
+            navigate(`/admins/${params?.id}`)
+          }
+          toastPopup.success("Admin updated successfully")
         }
       } catch (error) {
         setLoading(false);
-        setErrorMessage(error.response.data.message);
+        setErrorMessage(error?.response?.data?.message);
       }
     }
   };
@@ -112,6 +118,15 @@ export default function EditAdmin() {
   }, [])
 
   return <>
+    <div>
+      <button className='back-edit' onClick={() => {
+        params?.pageNumber ?
+          navigate(`/admins/page/${params?.pageNumber}/${params?.id}`)
+          : navigate(`/admins/${params?.id}`)
+      }}>
+        <i className="fa-solid fa-arrow-left"></i>
+      </button>
+    </div>
     <div className="row">
       <div className="col-md-12">
         <div className="edit-admin-page">
@@ -127,7 +142,7 @@ export default function EditAdmin() {
               errorList.map((err, index) => {
                 return (
                   <div key={index} className="alert alert-danger myalert">
-                    {err.message}
+                    {err?.message}
                   </div>
                 )
               })
@@ -140,7 +155,7 @@ export default function EditAdmin() {
                 type="text"
                 name="name"
                 id="name"
-                value={newAdmin.name}
+                value={newAdmin?.name}
               />
               <label htmlFor="email">Email</label>
               <input
@@ -149,7 +164,7 @@ export default function EditAdmin() {
                 type="email"
                 name="email"
                 id="email"
-                value={newAdmin.email}
+                value={newAdmin?.email}
               />
               <button className='add-admin-button'>
                 {loading ?

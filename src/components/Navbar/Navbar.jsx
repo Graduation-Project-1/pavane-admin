@@ -3,9 +3,8 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 import { authActions } from '../../store/auth-slice'
 import NavLogo from '../../assets/LOGO-01.png'
-import './Navbar.scss'
-import WelcomeImage from '../../assets/Welcome.jpg'
 import adminServices from '../../services/adminServices';
+import './Navbar.scss'
 
 export default function Navbar() {
 
@@ -18,11 +17,11 @@ export default function Navbar() {
   async function getAdminHandler() {
     try {
       const { data } = await adminServices.getAdmin();
-      if (data.success && data.status === 200) {
-        setName(data.Data.name)
+      if (data?.success && data?.status === 200) {
+        setName(data?.Data?.name)
       }
     } catch (e) {
-      setErrorMessage(e.response.data.message);
+      setErrorMessage(e?.response?.data?.message);
     }
   }
 
@@ -34,8 +33,6 @@ export default function Navbar() {
   useEffect(() => {
     getAdminHandler()
   }, [])
-
-
 
   return <>
     <nav className="navbar navbar-expand-lg mynav">
@@ -53,12 +50,6 @@ export default function Navbar() {
             </li>
           </ul>
           <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-            {/* <li className="nav-item">
-              <a className="nav-link" href="#"><span>Welcome</span> Ahmed Samir</a>
-            </li> */}
-            {/* <li className="nav-item welcome-image">
-              <img src={WelcomeImage} alt="" />
-            </li> */}
             <li className="nav-item" onClick={logoutHandler}>
               <a className="nav-link">Logout <i className="fa-solid fa-right-from-bracket"></i></a>
             </li>

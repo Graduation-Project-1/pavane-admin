@@ -95,17 +95,19 @@ export default function EditCategory() {
         const { data } = await categoryServices.editCategory(params?.id, editedData)
         if (data?.success && data?.status === 200) {
           setLoading(false);
-          var formData = new FormData();
-          formData.append("images", uploadImage);
-          setLoading(true);
-          try {
-            const { data } = await categoryServices.uploadImageCategory(params?.id, formData)
-            if (data?.success && data?.code === 200) {
+          if (typeof (uploadImage) === 'object') {
+            var formData = new FormData();
+            formData.append("images", uploadImage);
+            setLoading(true);
+            try {
+              const { data } = typeof uploadImage === "object" && await categoryServices.uploadImageCategory(params?.id, formData)
+              if (data?.success && data?.code === 200) {
+                setLoading(false);
+              }
+            } catch (error) {
               setLoading(false);
+              setErrorMessage(error);
             }
-          } catch (error) {
-            setLoading(false);
-            setErrorMessage(error);
           }
           if (params?.pageNumber) {
             navigate(`/categories/page/${params?.pageNumber}/${params?.id}`)
@@ -155,7 +157,7 @@ export default function EditCategory() {
               errorList.map((err, index) => {
                 return (
                   <div key={index} className="alert alert-danger myalert">
-                    {err.message}
+                    {err?.message}
                   </div>
                 )
               })

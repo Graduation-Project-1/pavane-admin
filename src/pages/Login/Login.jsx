@@ -50,25 +50,25 @@ export default function Login() {
     setErrorList([]);
     let validationResult = loginValidation(adminData);
     setLoading(true);
-    if (validationResult.error) {
+    if (validationResult?.error) {
       setLoading(false);
-      setErrorList(validationResult.error.details);
+      setErrorList(validationResult?.error?.details);
     } else {
       setLoading(true);
       try {
         const { data } = await authServices.login(adminData)
-        if (data.message === "Success") {
+        if (data?.message === "Success") {
           setLoading(false);
           dispatch(
             authActions.login({
-              AdminToken: data.token
+              AdminToken: data?.token
             })
           );
           navigate("/");
         }
       } catch (error) {
         setLoading(false);
-        setErrorMessage(error.response.data.message);
+        setErrorMessage(error?.response?.data?.message);
       }
     }
   };
@@ -90,7 +90,7 @@ export default function Login() {
               errorList.map((err, index) => {
                 return (
                   <div key={index} className="alert alert-danger myalert">
-                    {err.message}
+                    {err?.message}
                   </div>
                 )
               })

@@ -29,7 +29,7 @@ export default function ItemDetails() {
       setLoading(true)
       if (data?.success && data?.status === 200) {
         setLoading(false);
-        setItem(data.Data)
+        setItem(data?.Data)
         setCategories(data?.Data?.categoryList)
       }
     } catch (e) {
@@ -136,11 +136,11 @@ export default function ItemDetails() {
               item?.cover ?
                 item?.cover?.includes('https://') ?
                   item?.cover :
-                  imageEndPoint + item?.cover :
+                  `${imageEndPoint}${item?.cover}` :
                 item?.images?.[0] ?
                   item?.images?.[0].includes('https://') ?
                     item?.images?.[0] :
-                    imageEndPoint + item?.images?.[0]
+                    `${imageEndPoint}${item?.images?.[0]}`
                   : ""
             }
               alt="cover image" />
@@ -154,7 +154,7 @@ export default function ItemDetails() {
                   {item?.images?.map((image, index) => {
                     return (
                       <div className="carousel-item active" key={index}>
-                        <img src={image.includes('https://') ? image : imageEndPoint + image} className="d-block w-100" alt="Item Image" />
+                        <img src={image.includes('https://') ? image : `${imageEndPoint}${image}`} className="d-block w-100" alt="Item Image" />
                       </div>
                     )
                   })}
@@ -176,7 +176,7 @@ export default function ItemDetails() {
             <div className="row">
               <div className="col-md-12">
                 <div className="actions">
-                  <button onClick={() => { navigate(`/items/page/${params?.pageNumber}/${params.id}/edit`) }}
+                  <button onClick={() => { navigate(`/items/page/${params?.pageNumber}/${params?.id}/edit`) }}
                     className='edit btn btn-warning'>
                     Edit
                   </button>
@@ -185,13 +185,13 @@ export default function ItemDetails() {
                       <button
                         className='edit btn btn-warning'
                         onClick={removeFromArchiveHandler}>
-                        {archiveLoading ? <i className="fa-solid fa-spinner spin"></i> : "Remove from Archive"}
+                        {archiveLoading ? <i className="fa-solid fa-spinner fa-spin"></i> : "Remove from Archive"}
                       </button>
                     ) : (
                       <button
                         className='edit btn btn-warning'
                         onClick={addToArchiveHandler}>
-                        {archiveLoading ? <i className="fa-solid fa-spinner spin"></i> : "Add to Archive"}
+                        {archiveLoading ? <i className="fa-solid fa-spinner fa-spin"></i> : "Add to Archive"}
                       </button>
                     )
                   }
@@ -202,29 +202,29 @@ export default function ItemDetails() {
                 </div>
               </div>
             </div>
-            <h2>{item.name}</h2>
+            <h2>{item?.name}</h2>
             <div>
               {item?.description?.length >= 500 ? (
                 <div className='seeMore'>
-                  {seeMore ? (<p className='Description'>{item.description}
+                  {seeMore ? (<p className='Description'>{item?.description}
                     <button onClick={() => { setSeeMore(false) }}>See Less</button></p>) :
-                    (<p className='Description'>{item.description.slice(0, 500)}
+                    (<p className='Description'>{item?.description?.slice(0, 500)}
                       - <button onClick={() => { setSeeMore(true) }}>See More</button></p>)}
                 </div>
               ) : (
-                <p className='Description'>{item.description}</p>
+                <p className='Description'>{item?.description}</p>
               )}
             </div>
 
-            <p><span>Brand:</span> {item?.brandId?.name}</p>
+            <p className='brand-click' onClick={() => { navigate(`/brands/${item?.brandId?._id}`) }}><span>Brand:</span> {item?.brandId?.name}</p>
             <p><span>Price:</span> {item?.price} L.E</p>
             <p><span>Discount:</span> {item?.discountRate ? item?.discountRate : 0} L.E</p>
             <p><span>Gender:</span> {item?.gender}</p>
             <p><span>For kids:</span> {item?.isAdult ? "No" : "Yes"}</p>
             <p><span>Rate:</span> {item?.averageRate &&
-              (((item?.averageRate).toString()).length === 1 ?
-                ((item?.averageRate).toString()).slice(0, 1) :
-                ((item?.averageRate).toString()).slice(0, 3))}</p>
+              (((item?.averageRate)?.toString())?.length === 1 ?
+                ((item?.averageRate)?.toString())?.slice(0, 1) :
+                ((item?.averageRate)?.toString())?.slice(0, 3))}</p>
             <p><span>Available Sizes:</span> {item?.sizes + ", "}</p>
             <p><span>Available Colors:</span> {item?.colors + ", "}</p>
             <p><span>Available Categories:</span> {
@@ -246,7 +246,7 @@ export default function ItemDetails() {
                 </div>
                 <div className="review-data">
                   <p className='comment'>{review?.comment}</p>
-                  <p className='reviewer' onClick={() => { navigate(`/customers/${review?.customerId?._id}`) }}>{review?.customerId?.name} - {new Date(review?.date).toLocaleString()}</p>
+                  <p className='reviewer' onClick={() => { navigate(`/customers/${review?.customerId?._id}`) }}>{review?.customerId?.name} - {new Date(review?.date)?.toLocaleString()}</p>
                 </div>
                 <div className="rating">
                   <Rating

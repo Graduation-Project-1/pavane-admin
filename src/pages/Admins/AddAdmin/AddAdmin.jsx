@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import adminServices from '../../../services/adminServices';
 import { ReactComponent as EyeOPen } from "../../../assets/eye_open.svg";
 import { ReactComponent as EyeClose } from "../../../assets/eye_close.svg";
+import toastPopup from '../../../helpers/toastPopup';
 import './AddAdmin.scss'
 
 export default function AddAdmin() {
@@ -13,7 +14,6 @@ export default function AddAdmin() {
   const [loading, setLoading] = useState(false);
   const [errorList, setErrorList] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
-  const [isAdded, setIsAdded] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   let type = "password"
@@ -58,37 +58,36 @@ export default function AddAdmin() {
     setErrorList([]);
     let validationResult = addAdminValidation(newAdmin);
     setLoading(true);
-    if (validationResult.error) {
+    if (validationResult?.error) {
       setLoading(false);
-      setErrorList(validationResult.error.details);
+      setErrorList(validationResult?.error?.details);
     } else {
       setLoading(true);
       try {
         const { data } = await adminServices.addAdmin(newAdmin)
-        if (data.success && data.message === "adminAdded") {
+        if (data?.success && data?.message === "adminAdded") {
           setLoading(false);
-          setIsAdded(true)
           navigate("/admins");
+          toastPopup.success("Admin added successfully")
         }
       } catch (error) {
         setLoading(false);
-        setErrorMessage(error.response.data.message);
+        setErrorMessage(error?.response?.data?.message);
       }
     }
   };
 
   return <>
+    <div>
+      <button className='back-edit' onClick={() => { navigate(`/admins`) }}>
+        <i className="fa-solid fa-arrow-left"></i>
+      </button>
+    </div>
     <div className="row">
       <div className="col-md-12">
         <div className="add-admin-page">
           <div className="add-admin-card">
             <h3>Add Admin</h3>
-            {
-              isAdded ?
-                (<div className="alert alert-success myalert">
-                  Added
-                </div>) : ""
-            }
             {
               errorMessage ?
                 (<div className="alert alert-danger myalert">
@@ -99,7 +98,7 @@ export default function AddAdmin() {
               errorList.map((err, index) => {
                 return (
                   <div key={index} className="alert alert-danger myalert">
-                    {err.message}
+                    {err?.message}
                   </div>
                 )
               })

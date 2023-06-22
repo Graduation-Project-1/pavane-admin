@@ -153,7 +153,7 @@ export default function CustomerDetails() {
                 customer?.image ?
                   customer?.image?.includes('https://') ?
                     customer?.image :
-                    imageEndPoint + customer?.image :
+                    `${imageEndPoint}${customer?.image}` :
                   `https://eitrawmaterials.eu/wp-content/uploads/2016/09/person-icon.png`
               }
               alt="Customer Image" />
@@ -173,13 +173,13 @@ export default function CustomerDetails() {
                       <button
                         className='edit btn btn-warning'
                         onClick={removeFromArchiveHandler}>
-                        {archiveLoading ? <i className="fa-solid fa-spinner spin"></i> : "Remove from Archive"}
+                        {archiveLoading ? <i className="fa-solid fa-spinner fa-spin"></i> : "Remove from Archive"}
                       </button>
                     ) : (
                       <button
                         className='edit btn btn-warning'
                         onClick={addToArchiveHandler}>
-                        {archiveLoading ? <i className="fa-solid fa-spinner spin"></i> : "Add to Archive"}
+                        {archiveLoading ? <i className="fa-solid fa-spinner fa-spin"></i> : "Add to Archive"}
                       </button>
                     )
                   }
@@ -192,7 +192,7 @@ export default function CustomerDetails() {
             </div>
             <h2>{customer?.name}</h2>
             <p>Email: {customer?.email}</p>
-            <p>Date of birth: {new Date(customer?.dateOfBirth).toDateString()}</p>
+            <p>Date of birth: {new Date(customer?.dateOfBirth)?.toDateString()}</p>
             <p>Phone: {customer?.phone}</p>
             <p>Gender: {customer?.gender}</p>
             <p>Location: {customer?.location}</p>

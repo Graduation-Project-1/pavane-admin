@@ -17,6 +17,7 @@ export default function Items() {
   const [postPerPage, setPostPerPage] = useState(10)
   const [totalResult, setTotalResult] = useState(0)
   const [searchValue, setSearchValue] = useState('')
+  const [hidePagination, setHidePagination] = useState(false)
 
   function handlePageChange(pageNumber) {
     navigate(`/items/page/${pageNumber}`)
@@ -30,6 +31,7 @@ export default function Items() {
       setLoading(true)
       if (data?.success && data?.status === 200) {
         setLoading(false);
+        setHidePagination(false)
         setItems(data?.Data)
         setTotalResult(data?.totalResult)
       }
@@ -44,6 +46,7 @@ export default function Items() {
       const { data } = await itemServices.itemSearch(searchValue, 1, 5000)
       setItems(data?.Data)
       setTotalResult(data?.totalResult)
+      setHidePagination(true)
     } catch (e) {
       setLoading(false);
       setErrorMessage(e?.response?.data?.message);
@@ -55,6 +58,7 @@ export default function Items() {
       const { data } = await itemServices.getMostLikedItems()
       setItems(data?.Data)
       setTotalResult(data?.totalResult)
+      setHidePagination(true)
     } catch (e) {
       setLoading(false);
       setErrorMessage(e?.response?.data?.message);
@@ -66,6 +70,7 @@ export default function Items() {
       const { data } = await itemServices.getArchivedItems()
       setItems(data?.Data)
       setTotalResult(data?.totalResult)
+      setHidePagination(true)
     } catch (e) {
       setLoading(false);
       setErrorMessage(e?.response?.data?.message);
@@ -176,12 +181,12 @@ export default function Items() {
                   (
                     items.map((item, index) => {
                       return (
-                        <tr key={item._id} onClick={() => navigate(`/items/page/${params?.pageNumber ? params?.pageNumber : 1}/${item?._id}`)}>
+                        <tr key={item?._id} onClick={() => navigate(`/items/page/${params?.pageNumber ? params?.pageNumber : 1}/${item?._id}`)}>
                           <td>{index + 1}</td>
-                          <td className='name'>{item.name}</td>
-                          <td>{item.gender}</td>
-                          <td>{item.price}</td>
-                          <td>{item.numberOfLikes}</td>
+                          <td className='name'>{item?.name}</td>
+                          <td>{item?.gender}</td>
+                          <td>{item?.price}</td>
+                          <td>{item?.numberOfLikes}</td>
                         </tr>
                       )
                     })
@@ -191,7 +196,7 @@ export default function Items() {
           </div>
         </div>
       </div>
-      <div className='pagination-nav'>
+      {!hidePagination && <div className='pagination-nav'>
         <Pagination
           activePage={currentPage}
           itemsCountPerPage={postPerPage}
@@ -201,7 +206,7 @@ export default function Items() {
           itemClass="page-item"
           linkClass="page-link"
         />
-      </div>
+      </div>}
     </div>
   </>
 }

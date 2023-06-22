@@ -31,8 +31,8 @@ let itemServices = {
     return response
   },
 
-  itemSearch: async (search = "", page = 1, size = 10) => {
-    const response = await Axios.get(`itemSearch${search.length > 0 ? `?search=${search}&page=${page}&size=${size}` : ""}`)
+  itemSearch: async (search, page = 1, size = 10) => {
+    const response = await Axios.get(`itemSearch?${search.length > 0 ? `&search=${search}&page=${page}&size=${size}` : ""}`)
     return response
   },
 
@@ -52,7 +52,7 @@ let itemServices = {
   },
 
   getBrandItems: async (brandId, page = 1, size = 10) => {
-    const response = await Axios.get(`getAllItemsWithFilter?brandId=${brandId}&page=${page}&size=${size}`)
+    const response = await Axios.get(`getAllItemsWithFilter?${brandId ? `&brandId=${brandId}&page=${page}&size=${size}` : ""}`)
     return response
   },
 

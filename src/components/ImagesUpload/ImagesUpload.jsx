@@ -58,7 +58,7 @@ export default function ImagesUpload({
       {({ imageList, onImageUpload, onImageRemove, dragProps }) => (
         <div className="image-upload-container">
           {type !== 'view' && <button
-            disabled={type === "view" || imageList.length === 10}
+            disabled={type === "view" || imageList?.length === 10}
             className={`upload-img-btn ${type === "view" && "view-only"}`}
             onClick={onImageUpload}
             {...dragProps}
@@ -113,7 +113,7 @@ export default function ImagesUpload({
                       onClick={() => {
                         getImage(item);
                       }}
-                      src={item?.includes('https://') ? item : imageEndPoint + item}
+                      src={item?.includes('https://') ? item : `${imageEndPoint}${item}`}
                     />
                   </div>
                 );
@@ -128,9 +128,9 @@ export default function ImagesUpload({
                       alt="img"
                       className={selectedImage === item.Location ? "image-item-selected" : "image-item"}
                       onClick={() => {
-                        getImage(item.Location)
+                        getImage(item?.Location)
                       }}
-                      src={item.Location}
+                      src={item?.Location}
                     />
                   </div>
                 );

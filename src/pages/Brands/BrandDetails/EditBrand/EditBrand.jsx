@@ -128,30 +128,34 @@ export default function EditBrand() {
         const { data } = await brandServices.editBrand(params?.id, editedData)
         if (data?.success && data?.status === 200) {
           setLoading(false);
-          var formData = new FormData();
-          formData.append("images", uploadImage);
-          setLoading(true);
-          try {
-            const { data } = typeof uploadImage === "object" &&
-              await brandServices.uploadImageBrand(params?.id, formData)
-            if (data?.success && data?.status === 200) {
+          if (typeof (uploadImage) === 'object') {
+            var formData = new FormData();
+            formData.append("images", uploadImage);
+            setLoading(true);
+            try {
+              const { data } = typeof uploadImage === "object" &&
+                await brandServices.uploadImageBrand(params?.id, formData)
+              if (data?.success && data?.status === 200) {
+                setLoading(false);
+              }
+            } catch (error) {
               setLoading(false);
+              setErrorMessage(error);
             }
-          } catch (error) {
-            setLoading(false);
-            setErrorMessage(error);
           }
-          var formDataCover = new FormData();
-          formDataCover.append("images", uploadCover);
-          setLoading(true);
-          try {
-            const { data } = typeof uploadCover === "object" && await brandServices.uploadCoverImageBrand(params?.id, formDataCover)
-            if (data?.success && data?.status === 200) {
+          if (typeof (uploadCover) === 'object') {
+            var formDataCover = new FormData();
+            formDataCover.append("images", uploadCover);
+            setLoading(true);
+            try {
+              const { data } = typeof uploadCover === "object" && await brandServices.uploadCoverImageBrand(params?.id, formDataCover)
+              if (data?.success && data?.status === 200) {
+                setLoading(false);
+              }
+            } catch (error) {
               setLoading(false);
+              setErrorMessage(error);
             }
-          } catch (error) {
-            setLoading(false);
-            setErrorMessage(error);
           }
           if (params?.pageNumber) {
             navigate(`/brands/page/${params?.pageNumber}/${params?.id}`)
@@ -252,7 +256,7 @@ export default function EditBrand() {
               errorList.map((err, index) => {
                 return (
                   <div key={index} className="alert alert-danger myalert">
-                    {err.message}
+                    {err?.message}
                   </div>
                 )
               })
@@ -357,11 +361,11 @@ export default function EditBrand() {
                 selectedValues={selected_categories}
                 onKeyPressFn={function noRefCheck() { }}
                 onRemove={function noRefCheck(selectedList, selectedItem) {
-                  toggleSelectedCategoriesHandler(selectedItem.id)
+                  toggleSelectedCategoriesHandler(selectedItem?.id)
                 }}
                 onSearch={function noRefCheck() { }}
                 onSelect={function noRefCheck(selectedList, selectedItem) {
-                  toggleSelectedCategoriesHandler(selectedItem.id)
+                  toggleSelectedCategoriesHandler(selectedItem?.id)
                 }}
                 options={categoriesOptions}
                 showCheckbox

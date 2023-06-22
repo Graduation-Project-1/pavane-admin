@@ -104,9 +104,9 @@ export default function EditCustomer() {
     setErrorList([]);
     let validationResult = editCustomerValidation(newCustomer);
     setLoading(true);
-    if (validationResult.error) {
+    if (validationResult?.error) {
       setLoading(false);
-      setErrorList(validationResult.error.details);
+      setErrorList(validationResult?.error?.details);
     } else {
       setLoading(true);
       let editedData = {};
@@ -121,17 +121,19 @@ export default function EditCustomer() {
         const { data } = await customerServices.editCustomer(params?.id, editedData)
         if (data?.success && data?.status === 200) {
           setLoading(false);
-          var formData = new FormData();
-          formData.append("images", uploadImage);
-          setLoading(true);
-          try {
-            const { data } = typeof uploadImage === "object" && await customerServices.uploadImageCustomer(params?.id, formData)
-            if (data.success && data.code === 200) {
+          if (typeof (uploadImage) === 'object') {
+            var formData = new FormData();
+            formData.append("images", uploadImage);
+            setLoading(true);
+            try {
+              const { data } = typeof uploadImage === "object" && await customerServices.uploadImageCustomer(params?.id, formData)
+              if (data.success && data.code === 200) {
+                setLoading(false);
+              }
+            } catch (error) {
               setLoading(false);
+              setErrorMessage(error);
             }
-          } catch (error) {
-            setLoading(false);
-            setErrorMessage(error);
           }
           navigate(`/customers/page/${params?.pageNumber}/${params?.id}`);
           toastPopup.success("Customer updated successfully")
@@ -175,7 +177,7 @@ export default function EditCustomer() {
               errorList.map((err, index) => {
                 return (
                   <div key={index} className="alert alert-danger myalert">
-                    {err.message}
+                    {err?.message}
                   </div>
                 )
               })

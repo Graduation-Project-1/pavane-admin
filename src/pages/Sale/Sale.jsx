@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import collectionServices from '../../services/collectionServices'
+import saleServices from '../../services/saleServices'
 import OverlayLoading from '../../components/OverlayLoading/OverlayLoading'
-import Pagination from "react-js-pagination";
-import './Collections.scss'
+import Pagination from 'react-js-pagination'
+import './Sale.scss'
 
-export default function Collections() {
+export default function Sale() {
 
   const navigate = useNavigate()
   const params = useParams()
 
   const [loading, setLoading] = useState(false)
-  const [collections, setCollections] = useState([])
+  const [sales, setSales] = useState([])
   const [errorMessage, setErrorMessage] = useState("");
   const [currentPage, setCurrentPage] = useState(params?.pageNumber ? parseInt(params?.pageNumber) : 1)
   const [postPerPage, setPostPerPage] = useState(10)
@@ -20,18 +20,18 @@ export default function Collections() {
   const [hidePagination, setHidePagination] = useState(false)
 
   function handlePageChange(pageNumber) {
-    navigate(`/collections/page/${pageNumber}`)
+    navigate(`/sale/page/${pageNumber}`)
     setCurrentPage(pageNumber)
   }
 
-  async function getAllCollectionsHandler() {
+  async function getAllSalesHandler() {
     setLoading(true)
     try {
-      const { data } = await collectionServices.getAllCollections(params?.pageNumber);
+      const { data } = await saleServices.getAllSales(params?.pageNumber);
       setLoading(true)
       if (data?.success && data?.status === 200) {
         setLoading(false);
-        setCollections(data?.Data)
+        setSales(data?.Data)
         setHidePagination(false)
       }
     } catch (e) {
@@ -40,10 +40,10 @@ export default function Collections() {
     }
   }
 
-  async function searchCollectionByName(searchValue) {
+  async function searchSalesByName(searchValue) {
     try {
-      const { data } = await collectionServices.collectionSearch(searchValue, 1, 5000)
-      setCollections(data?.Data)
+      const { data } = await saleServices.saleSearch(searchValue, 1, 5000)
+      setSales(data?.Data)
       setTotalResult(data?.totalResult)
       setHidePagination(true)
     } catch (e) {
@@ -52,10 +52,10 @@ export default function Collections() {
     }
   }
 
-  async function topCollectionsHandler() {
+  async function topSalesHandler() {
     try {
-      const { data } = await collectionServices.getMostLikedCollections()
-      setCollections(data?.Data)
+      const { data } = await saleServices.getMostLikedSales()
+      setSales(data?.Data)
       setTotalResult(data?.totalResult)
       setHidePagination(true)
     } catch (e) {
@@ -65,14 +65,14 @@ export default function Collections() {
   }
 
   useEffect(() => {
-    getAllCollectionsHandler(params?.pageNumber)
+    getAllSalesHandler(params?.pageNumber)
   }, [params?.pageNumber])
 
   useEffect(() => {
     if (searchValue?.length > 0) {
-      searchCollectionByName(searchValue)
+      searchSalesByName(searchValue)
     } else {
-      getAllCollectionsHandler(params?.pageNumber)
+      getAllSalesHandler(params?.pageNumber)
     }
   }, [searchValue])
 
@@ -83,8 +83,8 @@ export default function Collections() {
           <div className="add-collection">
             <button
               className='add-collection-btn'
-              onClick={() => { navigate(`/collections/addCollection`) }}>
-              Add Collection
+              onClick={() => { navigate(`/sale/addSale`) }}>
+              Add Sale
             </button>
           </div>
         </div>
@@ -107,7 +107,7 @@ export default function Collections() {
                 <input
                   defaultChecked
                   value="all"
-                  onClick={getAllCollectionsHandler}
+                  onClick={getAllSalesHandler}
                   type="radio"
                   name="filter"
                   id="all"
@@ -118,12 +118,12 @@ export default function Collections() {
               <div>
                 <input
                   value="top_items"
-                  onClick={topCollectionsHandler}
+                  onClick={topSalesHandler}
                   type="radio"
                   name="filter"
                   id="top_items"
                 />
-                <label htmlFor="top_items">Top Collections</label>
+                <label htmlFor="top_items">Top Sales</label>
               </div>
             </div>
           </div>
@@ -153,14 +153,14 @@ export default function Collections() {
               <tbody>
                 {loading ? (<OverlayLoading />) :
                   (
-                    collections.map((collection, index) => {
+                    sales.map((sale, index) => {
                       return (
-                        <tr key={collection?._id} onClick={() => navigate(`/collections/page/${params?.pageNumber ? params?.pageNumber : 1}/${collection?._id}`)}>
+                        <tr key={sale?._id} onClick={() => navigate(`/sale/page/${params?.pageNumber ? params?.pageNumber : 1}/${sale?._id}`)}>
                           <td>{index + 1}</td>
-                          <td>{collection?.name}</td>
-                          <td>{collection?.season}</td>
-                          <td>{new Date(collection?.date)?.toDateString()}</td>
-                          <td>{collection?.numberOfLikes}</td>
+                          <td>{sale?.name}</td>
+                          <td>{sale?.season}</td>
+                          <td>{new Date(sale?.date)?.toDateString()}</td>
+                          <td>{sale?.numberOfLikes}</td>
                         </tr>
                       )
                     })

@@ -69,17 +69,17 @@ export default function AddCustomer() {
     setErrorList([]);
     let validationResult = addCustomerValidation(newCustomer);
     setLoading(true);
-    if (validationResult.error) {
+    if (validationResult?.error) {
       setLoading(false);
-      setErrorList(validationResult.error.details);
+      setErrorList(validationResult?.error?.details);
     } else {
       setLoading(true);
       try {
         let customerData = {
-          name: newCustomer.name,
-          email: newCustomer.email,
-          password: newCustomer.password,
-          phone: newCustomer.phone,
+          name: newCustomer?.name,
+          email: newCustomer?.email,
+          password: newCustomer?.password,
+          phone: newCustomer?.phone,
           dateOfBirth: dateOfBirth,
           gender: gender,
           location: location,
@@ -260,7 +260,7 @@ export default function AddCustomer() {
                 id="location"
                 name="location"
                 title='location'>
-                <option defaultValue='City'>-- City --</option>
+                <option value=''>-- City --</option>
                 <option value="Cairo">Cairo</option>
                 <option value="Alexandria">Alexandria</option>
                 <option value="Giza">Giza</option>

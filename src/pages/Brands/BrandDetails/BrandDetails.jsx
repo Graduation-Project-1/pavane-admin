@@ -208,7 +208,7 @@ export default function BrandDetails() {
               brand?.coverImage ?
                 brand?.coverImage?.includes('https://') ?
                   brand?.coverImage :
-                  imageEndPoint + brand?.coverImage
+                  `${imageEndPoint}${brand?.coverImage}`
                 : "https://www.lcca.org.uk/media/574173/brand.jpg"
             }
               alt="cover image" />
@@ -246,13 +246,13 @@ export default function BrandDetails() {
                       <button
                         className='edit btn btn-warning'
                         onClick={removeFromArchiveHandler}>
-                        {archiveLoading ? <i className="fa-solid fa-spinner spin"></i> : "Remove from Archive"}
+                        {archiveLoading ? <i className="fa-solid fa-spinner fa-spin"></i> : "Remove from Archive"}
                       </button>
                     ) : (
                       <button
                         className='edit btn btn-warning'
                         onClick={addToArchiveHandler}>
-                        {archiveLoading ? <i className="fa-solid fa-spinner spin"></i> : "Add to Archive"}
+                        {archiveLoading ? <i className="fa-solid fa-spinner fa-spin"></i> : "Add to Archive"}
                       </button>
                     )
                   }

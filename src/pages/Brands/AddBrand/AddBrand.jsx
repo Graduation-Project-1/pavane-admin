@@ -198,7 +198,7 @@ export default function AddBrand() {
               errorList.map((err, index) => {
                 return (
                   <div key={index} className="alert alert-danger myalert">
-                    {err.message}
+                    {err?.message}
                   </div>
                 )
               })
@@ -323,11 +323,11 @@ export default function AddBrand() {
                 displayValue="name"
                 onKeyPressFn={function noRefCheck() { }}
                 onRemove={function noRefCheck(selectedList, selectedItem) {
-                  toggleSelectedCategoriesHandler(selectedItem.id)
+                  toggleSelectedCategoriesHandler(selectedItem?.id)
                 }}
                 onSearch={function noRefCheck() { }}
                 onSelect={function noRefCheck(selectedList, selectedItem) {
-                  toggleSelectedCategoriesHandler(selectedItem.id)
+                  toggleSelectedCategoriesHandler(selectedItem?.id)
                 }}
                 options={categoriesOptions}
                 showCheckbox
