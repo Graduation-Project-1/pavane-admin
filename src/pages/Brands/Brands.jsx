@@ -43,7 +43,7 @@ export default function Brands() {
 
   async function searchBrandByName(searchValue) {
     try {
-      const { data } = await brandServices.brandSearch(searchValue, 1, 5000)
+      const { data } = await brandServices.brandSearch(searchValue)
       setBrands(data?.Data)
       setTotalResult(data?.totalResult)
       setHidePagination(true)

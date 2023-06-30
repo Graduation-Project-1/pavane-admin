@@ -43,7 +43,7 @@ export default function Items() {
 
   async function searchItemByName(searchValue) {
     try {
-      const { data } = await itemServices.itemSearch(searchValue, 1, 5000)
+      const { data } = await itemServices.itemSearch(searchValue)
       setItems(data?.Data)
       setTotalResult(data?.totalResult)
       setHidePagination(true)

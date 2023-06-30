@@ -42,7 +42,7 @@ export default function Collections() {
 
   async function searchCollectionByName(searchValue) {
     try {
-      const { data } = await collectionServices.collectionSearch(searchValue, 1, 5000)
+      const { data } = await collectionServices.collectionSearch(searchValue)
       setCollections(data?.Data)
       setTotalResult(data?.totalResult)
       setHidePagination(true)

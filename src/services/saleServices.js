@@ -16,8 +16,8 @@ let saleServices = {
     return response
   },
 
-  saleSearch: async (search, page = 1, size = 10) => {
-    const response = await Axios.get(`saleSearch?${search.length > 0 ? `&search=${search}&page=${page}&size=${size}` : ""}`)
+  saleSearch: async (search) => {
+    const response = await Axios.get(`saleSearch?${search.length > 0 ? `&search=${search}` : ""}`)
     return response
   },
 

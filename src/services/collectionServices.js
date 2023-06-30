@@ -16,8 +16,8 @@ let collectionServices = {
     return response
   },
 
-  collectionSearch: async (search, page = 1, size = 10) => {
-    const response = await Axios.get(`collectionSearch?${search.length > 0 ? `&search=${search}&page=${page}&size=${size}` : ""}`)
+  collectionSearch: async (search) => {
+    const response = await Axios.get(`collectionSearch?${search.length > 0 ? `&search=${search}` : ""}`)
     return response
   },
 

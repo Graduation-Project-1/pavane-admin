@@ -42,7 +42,7 @@ export default function Sale() {
 
   async function searchSalesByName(searchValue) {
     try {
-      const { data } = await saleServices.saleSearch(searchValue, 1, 5000)
+      const { data } = await saleServices.saleSearch(searchValue)
       setSales(data?.Data)
       setTotalResult(data?.totalResult)
       setHidePagination(true)

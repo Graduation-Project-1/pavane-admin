@@ -26,8 +26,8 @@ let brandServices = {
     return response
   },
 
-  brandSearch: async (search, page = 1, size = 10) => {
-    const response = await Axios.get(`brandSearch?${search.length > 0 ? `&search=${search}&page=${page}&size=${size}` : ""}`)
+  brandSearch: async (search) => {
+    const response = await Axios.get(`brandSearch?${search.length > 0 ? `&search=${search}` : ""}`)
     return response
   },
 

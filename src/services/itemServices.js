@@ -32,7 +32,7 @@ let itemServices = {
   },
 
   itemSearch: async (search, page = 1, size = 10) => {
-    const response = await Axios.get(`itemSearch?${search.length > 0 ? `&search=${search}&page=${page}&size=${size}` : ""}`)
+    const response = await Axios.get(`itemSearch?${search.length > 0 ? `&search=${search}` : ""}`)
     return response
   },
 
